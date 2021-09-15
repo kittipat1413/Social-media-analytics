@@ -6,3 +6,4 @@ https://cu-social-media-analytics.herokuapp.com/
 pip install -r requirements.txt 
 python index.py 
 ```
+<img src="./assets/facebook_heatmap.svg">
