@@ -28,7 +28,7 @@ def display_page(pathname):
     if pathname == '/page2':
         return page1.layout
     else:
-        return "404 Page Error!"
+        return page1.layout
 
 
 if __name__ == '__main__':
