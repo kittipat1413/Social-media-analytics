@@ -2,4 +2,7 @@
 https://cu-social-media-analytics.herokuapp.com/
 
 ## Running
-``` python index.py ```
+```python
+pip install -r requirements.txt 
+python index.py 
+```
