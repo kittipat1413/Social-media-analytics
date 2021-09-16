@@ -7,7 +7,7 @@ pip install -r requirements.txt
 python index.py 
 ```
 
-## Example
+## Example Vis
 
 ### Facebook Engagement Time 
 <img src="./assets/facebook_heatmap.svg">
