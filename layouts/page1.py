@@ -19,40 +19,40 @@ df_channel_account_top_engagement = pd.read_csv(DATA_PATH.joinpath("df_channel_a
 
 layout = html.Div([
 
-                        # First row
+                    # First row
+                    html.Div([
+                        # First part in row
                         html.Div([
-                            # First part in row
-                            html.Div([
-                                html.H2("Most popular channel by influencer"),
-                                dcc.Graph(id="graph")
-                                    ], className="six columns"),
+                            html.H2("Most popular channel by influencer"),
+                            dcc.Graph(id="graph")
+                                ], className="six columns"),
 
-                            # Second part in row
-                            html.Div([
-                                html.H2("Most popular channel by engagement"),
-                                dcc.Graph(id="graph2")
-                                    ], className="six columns"),
-
-                                ], className="row"),
-
-                        # Second row
+                        # Second part in row
                         html.Div([
-                            
-                            # First part in row
-                            html.Div([
-                                html.H2("Best time to post by channel"),
+                            html.H2("Most popular channel by engagement"),
+                            dcc.Graph(id="graph2")
+                                ], className="six columns"),
 
-                                dcc.Dropdown(
-                                            id='channel',
-                                            options=[{"value": x, "label": x}
-                                                    for x in channel],
-                                            value='facebook'
-                                            ),
+                            ], className="row"),
 
-                                dcc.Graph(id="graph3")
-                                    ]),
+                    # Second row
+                    html.Div([
+                        
+                        # First part in row
+                        html.Div([
+                            html.H2("Best time to post by channel"),
 
-                                ], className="row")
+                            dcc.Dropdown(
+                                        id='channel',
+                                        options=[{"value": x, "label": x}
+                                                for x in channel],
+                                        value='facebook'
+                                        ),
+
+                            dcc.Graph(id="graph3")
+                                ]),
+
+                            ], className="row")
                 ])
 
 @app.callback(
@@ -65,21 +65,22 @@ def change_channel(channel_drop):
     # define donut color
     donut_colors=['#104E8B', '#9A32CD', 'lightskyblue', '#B22222']
 
+    # Donut graph1
     fig_donut = go.Figure(data=[go.Pie(labels=df_channel_engagement['channel'], values=df_channel_engagement['account_id'], hole=.5, marker_colors=donut_colors, sort=False)])
     fig_donut.update_layout(annotations=[dict(text='Channel', x=0.5, y=0.5, font_size=20, showarrow=False)])
 
-
+    # Donut graph2
     fig_donut2 = go.Figure(data=[go.Pie(labels=df_channel_engagement['channel'], values=df_channel_engagement['new_engagement'], hole=.5, marker_colors=donut_colors, sort=False)])
     fig_donut2.update_layout(annotations=[dict(text='Channel', x=0.5, y=0.5, font_size=20, showarrow=False)])
 
-
-    fig_graph3 = px.imshow(df_day_vs_time.loc[channel_drop],
+    # Heatmap chart
+    fig_heat3 = px.imshow(df_day_vs_time.loc[channel_drop],
                 labels=dict(y="Day of Week", x="Time of Day", color="Engagment(%)"),
                 x=df_day_vs_time.columns,
                 y=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
                 color_continuous_scale='blues'
                )
-    fig_graph3.update_layout(xaxis_tickangle=-45)
+    fig_heat3.update_layout(xaxis_tickangle=-45)
 
-    return fig_donut, fig_donut2, fig_graph3
+    return fig_donut, fig_donut2, fig_heat3
 

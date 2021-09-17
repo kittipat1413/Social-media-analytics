@@ -8,7 +8,7 @@ from app import server
 
 # Connect to your app pages
 from layouts import page1
-
+from layouts import page2
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -26,7 +26,7 @@ def display_page(pathname):
     if pathname == '/page1':
         return page1.layout
     if pathname == '/page2':
-        return page1.layout
+        return page2.layout
     else:
         return page1.layout
 
