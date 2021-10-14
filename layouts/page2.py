@@ -13,7 +13,8 @@ DATA_PATH = PATH.joinpath("../datasets").resolve()
 channel = ['facebook', 'instagram', 'twitter', 'youtube']
 
 
-df_channel_account_top_engagement = pd.read_csv(DATA_PATH.joinpath("df_channel_account_top_engagement.csv"))
+df_sunburst = pd.read_csv(DATA_PATH.joinpath("df_sunburst.csv"))
+df_view_vs_fan = pd.read_csv(DATA_PATH.joinpath("df_view_vs_fan.csv"))
 df_ig_img_video = pd.read_csv(DATA_PATH.joinpath("df_ig_img_video.csv"))
 df_fb_funnel = pd.read_csv(DATA_PATH.joinpath("df_fb_funnel.csv"))
 
@@ -23,24 +24,10 @@ layout = html.Div([
                     html.Div([
                         # First part in row
                         html.Div([
-
-                            html.H2("Most popular influencers by channel"),
+                            html.H2("Twitter:"),
+                            html.H2("Most popular twitter hashtag in 2020"),
                             
-                            dcc.Dropdown(
-                                        id='channel2',
-                                        options=[{"value": x, "label": x}
-                                                for x in channel],
-                                        value='facebook'
-                                        ),
-
-                            dcc.Dropdown(
-                                        id='top_filter',
-                                        options=[{"value": x, "label": "Top " + str(x) }
-                                        for x in range(5,16,5)],
-                                        value='5'
-                                        ),
-
-                            dcc.Graph(id="graph4")
+                            dcc.Graph(id="graph6")
 
                                 ]),
 
@@ -50,108 +37,102 @@ layout = html.Div([
                     html.Div([
                         # First part in row
                         html.Div([
-                            html.H2("Comparing performance between image and video post in Instagram"),
-                            dcc.Graph(id="graph5")
-                        ], className="four columns"),
+                            html.H2("Youtube:"),
+                            html.H2("Relationship between youtube average view and fan"),
 
-                        # Second part in row
+                            dcc.Graph(id="graph7")
+
+                                ]),
+
+                            ], className="row"),
+
+                    # Third row
+                    html.Div([
+                        # First part in row
                         html.Div([
-                        
-                            html.H2("Comparing performance between pages in same catagory of Facebook"),
+                            html.H2("Instagram:"),
+                            html.H2("Comparing performance between image and video post"),
+
+                            dcc.Graph(id="graph8")
+
+                                ]),
+
+                            ], className="row"),
+
+                    # Forth row
+                    html.Div([
+                        # First part in row
+                        html.H2("Facebook:"),
+                        html.H2("Comparing performance between pages in same catagory of Facebook"),
+
+                        html.Div([
 
                             html.Div([
 
-                                html.Div([
+                                dcc.Dropdown(
+                                            id='page1_filter',
+                                            options=[{"value": x, "label": x}
+                                                    for x in df_fb_funnel['account_display_name'].drop_duplicates()],
+                                            value='ปันโปร - Punpromotion'
+                                            )
+                                            ], className="five columns"),
 
-                                    dcc.Dropdown(
-                                                id='page1_filter',
-                                                options=[{"value": x, "label": x}
-                                                        for x in df_fb_funnel['account_display_name'].drop_duplicates()],
-                                                value='ปันโปร - Punpromotion'
-                                                )
-                                                ], className="five columns"),
+                            html.Div([
 
-                                html.Div([
+                                dcc.Dropdown(
+                                            id='page2_filter',
+                                            options=[{"value": x, "label": x}
+                                            for x in df_fb_funnel['account_display_name'].drop_duplicates()],
+                                            value='SALE HERE'
+                                            )]
+                                            
+                                            , className="five columns")],
+                            className="row"),
 
-                                    dcc.Dropdown(
-                                                id='page2_filter',
-                                                options=[{"value": x, "label": x}
-                                                for x in df_fb_funnel['account_display_name'].drop_duplicates()],
-                                                value='SALE HERE'
-                                                )]
-                                                
-                                                , className="five columns")],
-                             className="row"),
-
-                            dcc.Graph(id="graph6")
-                        ], className="eight columns"),
+                        dcc.Graph(id="graph9")
+                        ,
 
                     ], className="row"),
-
-                    # # Third row
-                    # html.Div([
-                    #     # First part in row
-                    #     html.Div([
-                    #         html.H2("Comparing performance between image and video post in Instagram"),
-                    #         dcc.Graph(id="graph5")
-                    #     ], className="six columns"),
-
-                    #     # Second part in row
-                    #     html.Div([
-                    #         html.H2("Comparing performance between pages in same catagory"),
-                    #         dcc.Graph(id="graph6")
-                    #     ], className="six columns"),
-
-                    # ], className="row")
                 ])
 
 @app.callback(
-    [Output("graph4", "figure"),
-    Output("graph5", "figure"),
-    Output("graph6", "figure")], 
-    [Input("channel2", "value"),
-    Input("top_filter", "value"), 
-    Input("page1_filter", "value"),
+    [Output("graph6", "figure"),
+    Output("graph7", "figure"),
+    Output("graph8", "figure"),
+    Output("graph9", "figure")], 
+    [Input("page1_filter", "value"),
     Input("page2_filter", "value")])
-def change_channel(channel_drop, top_drop, page1_drop, page2_drop):
+def change_filter(page1_drop, page2_drop):
 
-    # Stack bar chart
-    fig_stack = go.Figure(go.Bar
-                            (x=df_channel_account_top_engagement[(df_channel_account_top_engagement['channel'] == channel_drop) & (df_channel_account_top_engagement['type_value'] == 'average_engagement_per_post')].head(int(top_drop))['value'], 
-                            y=df_channel_account_top_engagement[(df_channel_account_top_engagement['channel'] == channel_drop) & (df_channel_account_top_engagement['type_value'] == 'average_engagement_per_post')].head(int(top_drop))['account_display_name'], 
-                            name='Average engagement per post',
-                            orientation='h',
-                            marker=dict(
-                                            color='rgba(255,99,71, 0.6)',
-                                            line=dict(color='rgba(255,99,71, 1.0)', width=3)
-                                        ),
-                            text=df_channel_account_top_engagement[(df_channel_account_top_engagement['channel'] == channel_drop) & (df_channel_account_top_engagement['type_value'] == 'average_engagement_per_post')].head(int(top_drop))['value']
-                            )
-                        )   
-                    
-                                    
-    fig_stack.add_trace(go.Bar
-                        (x=df_channel_account_top_engagement[(df_channel_account_top_engagement['channel'] == channel_drop) & (df_channel_account_top_engagement['type_value'] == 'fan')].head(int(top_drop))['value'], 
-                        y=df_channel_account_top_engagement[(df_channel_account_top_engagement['channel'] == channel_drop) & (df_channel_account_top_engagement['type_value'] == 'fan')].head(int(top_drop))['account_display_name'], 
-                        name='Fan',
-                        orientation='h',
-                        marker=dict(
-                                        color='rgba(74,128,140, 0.6)',
-                                        line=dict(color='rgba(74,128,140, 1.0)', width=3)
-                                    ),
-                        text=df_channel_account_top_engagement[(df_channel_account_top_engagement['channel'] == channel_drop) & (df_channel_account_top_engagement['type_value'] == 'fan')].head(int(top_drop))['value'],
-                        )
-                    )
+    # Sunburst chart
+    color_cat=['', '#ABDEE6', '#CBAACB', 'FFFFB5', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#F6EAC2', '#ECEAE4', '#B5EAD7', '#55CBCD']
+    fig_sunburst =go.Figure(go.Sunburst(
+        labels=df_sunburst['All_label'].to_list(),
+        parents=df_sunburst['Parent'].to_list(),
+        values=df_sunburst['Value'].to_list(),
+        branchvalues='total',
+        maxdepth=2,
+        marker_colors= color_cat
+    ))
+    fig_sunburst.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=22)
 
-    fig_stack.update_traces(texttemplate='%{text:.3s}', textposition='inside')
-    fig_stack.update_layout(barmode='stack', yaxis={'categoryorder':'total ascending'})
+
+    # Scatter plot
+    fig_scatter = px.scatter(df_view_vs_fan, x="fan", y="avg_view", color="type_fan", 
+                hover_data=['account_display_name'], 
+                # facet_col="type_fan",
+                color_discrete_sequence=['#B0C4DE', '#DAA520', '#483D8B'] 
+                )
+
 
     # Bar chart
-    #fig_bar = px.bar(df_ig_img_video, x='avg_engagement', y='post_type', orientation='h', text='avg_engagement', color='post_type', color_discrete_sequence=['#9400D3', '#A9A9A9'])
-    fig_bar = px.bar(df_ig_img_video, x='post_type', y='avg_engagement', text='avg_engagement', color='post_type', color_discrete_sequence=['#9400D3', '#A9A9A9'])
+    fig_bar = px.bar(df_ig_img_video, x='avg_engagement', y='post_type', orientation='h', text='avg_engagement', color='post_type', color_discrete_sequence=['#BA55D3', '#A9A9A9'])
+    # fig_bar = px.bar(df_ig_img_video, x='post_type', y='avg_engagement', text='avg_engagement', color='post_type', color_discrete_sequence=['#BA55D3', '#A9A9A9'])
     fig_bar.update_traces(texttemplate='%{text:.2s}', textposition='inside')
-    fig_bar.update_layout(uniformtext_minsize=15, uniformtext_mode='hide')
+    fig_bar.update_layout(uniformtext_minsize=15, uniformtext_mode='hide', height=300)
 
+
+    # Funnel chart
     fig_funnel = go.Figure()
 
     list_y = ['Engagement', 'Reaction', 'Positive Reaction', 'Share', 'Tag friend', 'Purchase intention']
@@ -184,5 +165,5 @@ def change_channel(channel_drop, top_drop, page1_drop, page2_drop):
         marker={"color": ["#B0C4DE", "#B0C4DE", "#B0C4DE", "#B0C4DE", "#B0C4DE"]}
         ))
 
-    return fig_stack, fig_bar, fig_funnel
+    return fig_sunburst, fig_scatter, fig_bar, fig_funnel
 
