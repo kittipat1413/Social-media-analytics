@@ -10,7 +10,7 @@ import base64
 
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
-IMG_PATH = PATH.joinpath("../image").resolve()
+IMG_PATH = PATH.joinpath("../Image").resolve()
 
 
 channel = ['facebook', 'instagram', 'twitter', 'youtube']
