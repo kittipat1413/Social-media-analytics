@@ -69,7 +69,7 @@ layout = html.Div([
                                         id='channel2',
                                         options=[{"value": x, "label": x}
                                                 for x in channel],
-                                        value='facebook'
+                                        value='youtube'
                                         ),
 
                             dcc.Dropdown(
