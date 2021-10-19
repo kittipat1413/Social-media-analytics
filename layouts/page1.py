@@ -27,13 +27,13 @@ layout = html.Div([
                     html.Div([
                         # First part in row
                         html.Div([
-                            html.H2("Most popular channel by influencer"),
+                            html.H2("Most popular social media platform by account"),
                             dcc.Graph(id="graph")
                                 ], className="six columns"),
 
                         # Second part in row
                         html.Div([
-                            html.H2("Most popular channel by engagement"),
+                            html.H2("Most popular social media platform by engagement"),
                             dcc.Graph(id="graph2")
                                 ], className="six columns"),
 
@@ -44,7 +44,7 @@ layout = html.Div([
                         
                         # First part in row
                         html.Div([
-                            html.H2("Best time to post by channel"),
+                            html.H2("Best time to post on social media"),
 
                             dcc.Dropdown(
                                         id='channel',
@@ -63,7 +63,7 @@ layout = html.Div([
                         
                         # First part in row
                         html.Div([
-                            html.H2("Most popular influencers by channel"),
+                            html.H2("Top account by platform"),
 
                             dcc.Dropdown(
                                         id='channel2',
@@ -87,13 +87,13 @@ layout = html.Div([
 
                     # Forth row
                     html.Div([
-                        html.H2("Subscriber growth for top influencers in 2020"),
+                        html.H2("Fan growth by account in 2020"),
 
                         dcc.Dropdown(
                                     id='mapped_name',
                                     options=[{"value": x, "label": x}
                                             for x in df_unique_name_channel['mapped_name'].drop_duplicates()],
-                                    value='Kaykai Salaider'
+                                    value='Money Buffalo'
                                     ),
 
                         dcc.Graph(id="graph5"),
@@ -167,7 +167,7 @@ def change_filter(channel_drop, channel_drop2, top_drop, mapped_name):
     fig_stack.update_layout(barmode='stack', yaxis={'categoryorder':'total ascending'})
 
 
-    # graph5
+    # Line chart
     # Define row and column for subplot
     fig_line = make_subplots(rows=4, cols=1)
 
@@ -197,6 +197,7 @@ def change_filter(channel_drop, channel_drop2, top_drop, mapped_name):
                     ),row=index+1, col=1,)
 
     fig_line.update_layout(height=700)
+    fig_line.update_yaxes(title_text='Fan')
 
 
     return fig_donut, fig_donut2, fig_heat3, fig_stack, fig_line

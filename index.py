@@ -13,8 +13,8 @@ from layouts import page2
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div([
-        dcc.Link(' Page1 ',id='page1', href='/page1'),
-        dcc.Link(' Page2 ',id='page2', href='/page2'),
+        dcc.Link(' Overview ',id='page1', href='/page1'),
+        dcc.Link(' Detail ',id='page2', href='/page2'),
     ], className="topnav"),
     dcc.Loading(type="default",fullscreen=True, style={'backgroundColor': 'transparent'},children=html.Div(id='page-content'))
 ])
