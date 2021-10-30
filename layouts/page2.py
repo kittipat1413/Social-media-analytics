@@ -35,60 +35,7 @@ encoded_yt_image = base64.b64encode(open(IMG_PATH.joinpath('yt.png'), 'rb').read
 layout = html.Div([
                 
                     # First Header
-                    html.Div([
-                        
-                        # First part in row    
-                        html.Div([
-                                    html.Img(src='data:image/png;base64,{}'.format(encoded_tw_image.decode()), height=80)
-                                ], className="one column"),
-
-                        # Second part in row
-                        html.Div([
-                                    html.H2("Most popular twitter hashtag in 2020")
-                                ], className="six columns")
-                        
-                            ], className="row"),
-
-                    # First graph
-                    dcc.Graph(id="graph6"),
-
-                    # Second Header
-                    html.Div([
-
-                        # First part in row
-                        html.Div([
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_yt_image.decode()), height=60)
-                                ], className="one column"),
-                                
-                        # Second part in row
-                        html.Div([
-                                    html.H2("Relationship between view on average and number of subscriber")
-                                ], className="ten columns")
-
-                            ], className="row"),
-
-                    # Second graph
-                    dcc.Graph(id="graph7"),
-
-                    # Third header
-                    html.Div([
-                        # First part in row
-                        html.Div([
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_ig_image.decode()), height=80)
-
-                                ], className="one column"),
-
-                        # Second part in row
-                        html.Div([
-                                    html.H2("Performance between image and video post")
-                                ], className="nine columns")
-
-                            ], className="row"),
-
-                    # Third graph
-                    dcc.Graph(id="graph8"),
-
-                    # Forth Header
+                    
                     html.Div([
 
                         # Forth Header
@@ -167,6 +114,60 @@ layout = html.Div([
                         ,
 
                     ], className="row"),
+
+                    # Second Header
+                    html.Div([
+
+                        # First part in row
+                        html.Div([
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_yt_image.decode()), height=60)
+                                ], className="one column"),
+                                
+                        # Second part in row
+                        html.Div([
+                                    html.H2("Relationship between view on average and number of subscriber")
+                                ], className="ten columns")
+
+                            ], className="row"),
+
+                    # Second graph
+                    dcc.Graph(id="graph7"),
+
+                    # Third header
+                    html.Div([
+                        # First part in row
+                        html.Div([
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_ig_image.decode()), height=80)
+
+                                ], className="one column"),
+
+                        # Second part in row
+                        html.Div([
+                                    html.H2("Performance between image and video post")
+                                ], className="nine columns")
+
+                            ], className="row"),
+
+                    # Third graph
+                    dcc.Graph(id="graph8"),
+
+                    # Forth Header
+                    html.Div([
+                        
+                        # First part in row    
+                        html.Div([
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_tw_image.decode()), height=80)
+                                ], className="one column"),
+
+                        # Second part in row
+                        html.Div([
+                                    html.H2("Most popular twitter hashtag in 2020")
+                                ], className="six columns")
+                        
+                            ], className="row"),
+
+                    # First graph
+                    dcc.Graph(id="graph6"),
                 ])
 
 # Set fan_amount dropdown option
@@ -182,7 +183,7 @@ def set_fan_amount_options(selected_categ):
     Output('fan_amount_filter', 'value'),
     Input('fan_amount_filter', 'options'))
 def set_fan_amount_value(available_options):
-    return available_options[0]['value']
+    return available_options[-1]['value']
 
 # Set page dropdown option
 @app.callback(
@@ -217,7 +218,8 @@ def set_page_value(available_options1, available_options2):
 def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop ):
 
     # Sunburst chart
-    color_cat=['', '#ABDEE6', '#CBAACB', 'FFFFB5', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#F6EAC2', '#ECEAE4', '#B5EAD7', '#55CBCD']
+    # color_cat=['', '#ABDEE6', '#CBAACB', 'FFFFB5', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#F6EAC2', '#ECEAE4', '#B5EAD7', '#55CBCD']
+    color_cat=['', '#ABDEE6', '#CBAACB', '#f8de7e', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#a9ba9d', '#b5b9ff', '#B5EAD7', '#55CBCD']
     fig_sunburst =go.Figure(go.Sunburst(
         labels=df_sunburst['All_label'].to_list(),
         parents=df_sunburst['Parent'].to_list(),
@@ -230,10 +232,10 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop ):
 
 
     # Scatter plot
-    fig_scatter = px.scatter(df_view_vs_fan, x="fan", y="avg_view", color="type_fan", 
+    fig_scatter = px.scatter(df_view_vs_fan.sort_values(by='type_fan'), x="fan", y="avg_view", color="type_fan", 
                 hover_data=['account_display_name'], 
                 # facet_col="type_fan",
-                color_discrete_sequence=['#B0C4DE', '#DAA520', '#483D8B'],
+                color_discrete_sequence=['#483D8B', '#DAA520', '#B0C4DE'],
                 labels={"type_fan": "Group of creator", "fan": "Subscriber", "avg_view": "Average view"}
                 )
 
