@@ -42,26 +42,6 @@ layout = html.Div([
                     # Second row
                     html.Div([
                         
-                        # First part in row
-                        html.Div([
-                            html.H2("Best time to post on social media"),
-
-                            dcc.Dropdown(
-                                        id='channel',
-                                        options=[{"value": x, "label": x}
-                                                for x in channel],
-                                        value='facebook'
-                                        ),
-
-                            dcc.Graph(id="graph3")
-                                ]),
-
-                            ], className="row"),
-
-                    # Third row
-                    html.Div([
-                        
-                        # First part in row
                         html.Div([
                             html.H2("Top account by platform"),
 
@@ -85,8 +65,11 @@ layout = html.Div([
 
                             ], className="row"),
 
-                    # Forth row
+                    # Third row
                     html.Div([
+                        
+                        # First part in row
+                        
                         html.H2("Fan growth by account in 2020"),
 
                         dcc.Dropdown(
@@ -97,6 +80,25 @@ layout = html.Div([
                                     ),
 
                         dcc.Graph(id="graph5"),
+
+                            ], className="row"),
+
+                    # Forth row
+                    html.Div([
+                        
+                        # First part in row
+                        html.Div([
+                            html.H2("Best time to post on social media"),
+
+                            dcc.Dropdown(
+                                        id='channel',
+                                        options=[{"value": x, "label": x}
+                                                for x in channel],
+                                        value='facebook'
+                                        ),
+
+                            dcc.Graph(id="graph3")
+                                ]),
                             
 
                             ], className="row")
