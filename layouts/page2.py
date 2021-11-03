@@ -130,6 +130,28 @@ layout = html.Div([
 
                             ], className="row"),
 
+                    html.H5('Fan'),
+                    # Fan Slider
+                    dcc.RangeSlider(
+                                    id='my-slider1',
+                                    min=0,
+                                    max=df_view_vs_fan['fan'].max(),
+                                    step=5000,
+                                    value=[0, df_view_vs_fan['fan'].max()],
+                                    tooltip={"placement": "bottom", "always_visible": True}
+                                    ),
+
+                    html.H5('View'),
+                    # View Slider
+                    dcc.RangeSlider(
+                                    id='my-slider2',
+                                    min=0,
+                                    max=df_view_vs_fan['avg_view'].max(),
+                                    step=5000,
+                                    value=[0, df_view_vs_fan['avg_view'].max()],
+                                    tooltip={"placement": "bottom", "always_visible": True}
+                                    ),
+
                     # Second graph
                     dcc.Graph(id="graph7"),
 
@@ -214,8 +236,10 @@ def set_page_value(available_options1, available_options2):
     [Input("page1_filter", "value"),
     Input("page2_filter", "value"),
     Input("categ_filter", "value"),
-    Input("fan_amount_filter", "value")])
-def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop ):
+    Input("fan_amount_filter", "value"),
+    Input("my-slider1", "value"),
+    Input("my-slider2", "value")])
+def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, fan_slider, view_slider):
 
     # Sunburst chart
     # color_cat=['', '#ABDEE6', '#CBAACB', 'FFFFB5', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#F6EAC2', '#ECEAE4', '#B5EAD7', '#55CBCD']
@@ -232,7 +256,10 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop ):
 
 
     # Scatter plot
-    fig_scatter = px.scatter(df_view_vs_fan.sort_values(by='type_fan'), x="fan", y="avg_view", color="type_fan", 
+    slide_filter = ((df_view_vs_fan['fan'] >= fan_slider[0]) & (df_view_vs_fan['fan'] <= fan_slider[1]) 
+                    & (df_view_vs_fan['avg_view'] >= view_slider[0]) & (df_view_vs_fan['avg_view'] <= view_slider[1]))
+
+    fig_scatter = px.scatter(df_view_vs_fan.loc[slide_filter].sort_values(by='type_fan'), x="fan", y="avg_view", color="type_fan", 
                 hover_data=['account_display_name'], 
                 # facet_col="type_fan",
                 color_discrete_sequence=['#483D8B', '#DAA520', '#B0C4DE'],
