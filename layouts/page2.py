@@ -35,10 +35,9 @@ encoded_yt_image = base64.b64encode(open(IMG_PATH.joinpath('yt.png'), 'rb').read
 layout = html.Div([
                 
                     # First Header
-                    
                     html.Div([
 
-                        # Forth Header
+                        # First row
                         html.Div([
                             # First part in row
                             html.Div([
@@ -52,13 +51,13 @@ layout = html.Div([
                             
                                 ], className="row"),
 
-
+                        # Second row
                         html.Div([
-
+                            # First part in row
                             html.Div([
                                         html.H5("Category")
                                     ]),
-
+                            # Second part in row
                             html.Div([
                                         dcc.Dropdown(
                                                         id='categ_filter',
@@ -71,13 +70,15 @@ layout = html.Div([
 
                                 ], style=dict(display='flex')),
 
+                        # Third row
                         html.Div([
 
+                            # First part in row
                             html.Div([
                                         html.H5("Fan range")
                                     ]),
                                        
-
+                            # Second part in row
                             html.Div([
                                         dcc.Dropdown(
                                                         id='fan_amount_filter',
@@ -86,7 +87,7 @@ layout = html.Div([
                                     ],className="five columns")
                                 ], style=dict(display='flex')),
 
-                        #Forth Dropdown
+                        #Forth row
                         html.Div([
                             
                             # First part in row
@@ -109,53 +110,13 @@ layout = html.Div([
                                             , className="five columns")],
                             className="row"),
 
-                        # Forth graph
+                        # Funnel graph
                         dcc.Graph(id="graph9")
                         ,
 
                     ], className="row"),
 
                     # Second Header
-                    html.Div([
-
-                        # First part in row
-                        html.Div([
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_yt_image.decode()), height=60)
-                                ], className="one column"),
-                                
-                        # Second part in row
-                        html.Div([
-                                    html.H2("Relationship between view on average and number of subscriber")
-                                ], className="ten columns")
-
-                            ], className="row"),
-
-                    html.H5('Fan'),
-                    # Fan Slider
-                    dcc.RangeSlider(
-                                    id='my-slider1',
-                                    min=0,
-                                    max=df_view_vs_fan['fan'].max(),
-                                    step=5000,
-                                    value=[0, df_view_vs_fan['fan'].max()],
-                                    tooltip={"placement": "bottom", "always_visible": True}
-                                    ),
-
-                    html.H5('View'),
-                    # View Slider
-                    dcc.RangeSlider(
-                                    id='my-slider2',
-                                    min=0,
-                                    max=df_view_vs_fan['avg_view'].max(),
-                                    step=5000,
-                                    value=[0, df_view_vs_fan['avg_view'].max()],
-                                    tooltip={"placement": "bottom", "always_visible": True}
-                                    ),
-
-                    # Second graph
-                    dcc.Graph(id="graph7"),
-
-                    # Third header
                     html.Div([
                         # First part in row
                         html.Div([
@@ -170,10 +131,10 @@ layout = html.Div([
 
                             ], className="row"),
 
-                    # Third graph
+                    # Bar graph
                     dcc.Graph(id="graph8"),
 
-                    # Forth Header
+                    # Third header
                     html.Div([
                         
                         # First part in row    
@@ -188,8 +149,61 @@ layout = html.Div([
                         
                             ], className="row"),
 
-                    # First graph
+                    # Sunburst graph
                     dcc.Graph(id="graph6"),
+                    
+
+                    # Forth Header
+                    html.Div([
+
+                        # First part in row
+                        html.Div([
+                            html.Img(src='data:image/png;base64,{}'.format(encoded_yt_image.decode()), height=60)
+                                ], className="one column"),
+                                
+                        # Second part in row
+                        html.Div([
+                                    html.H2("Relationship between view on average and number of subscriber")
+                                ], className="ten columns")
+
+                            ], className="row"),
+
+                    html.Header('Subscriber'),
+                    # Fan Slider
+                    dcc.RangeSlider(
+                                    id='my-slider1',
+                                    min=100000,
+                                    max=df_view_vs_fan['fan'].max(),
+                                    step=5000,
+                                    value=[0, df_view_vs_fan['fan'].max()],
+                                    tooltip={"placement": "bottom", "always_visible": True},
+                                    marks={
+                                            100000: {'label': 'Silver', 'style': {'color': '#000000'}},
+                                            999999: {'label': 'Gold', 'style': {'color': '#000000'}},
+                                            10000000: {'label': 'Diamond', 'style': {'color': '#000000'}}
+                                        }
+                                    ),
+
+                    html.Header('Average View'),
+                    # View Slider
+                    dcc.RangeSlider(
+                                    id='my-slider2',
+                                    min=0,
+                                    max=df_view_vs_fan['avg_view'].max(),
+                                    step=5000,
+                                    value=[0, df_view_vs_fan['avg_view'].max()],
+                                    tooltip={"placement": "bottom", "always_visible": True},
+                                    marks={
+                                            0: {'label': '0%', 'style': {'color': '#000000'}},
+                                            df_view_vs_fan['avg_view'].max()*0.25: {'label': '25%', 'style': {'color': '#000000'}},
+                                            df_view_vs_fan['avg_view'].max()*0.5: {'label': '50%', 'style': {'color': '#000000'}},
+                                            df_view_vs_fan['avg_view'].max()*0.75: {'label': '75%', 'style': {'color': '#000000'}},
+                                            int(df_view_vs_fan['avg_view'].max()): {'label': '100%', 'style': {'color': '#000000'}}
+                                        }
+                                    ),
+
+                    # Scatter graph
+                    dcc.Graph(id="graph7"),
                 ])
 
 # Set fan_amount dropdown option
@@ -262,7 +276,11 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, fan_slid
     fig_scatter = px.scatter(df_view_vs_fan.loc[slide_filter].sort_values(by='type_fan'), x="fan", y="avg_view", color="type_fan", 
                 hover_data=['account_display_name'], 
                 # facet_col="type_fan",
-                color_discrete_sequence=['#483D8B', '#DAA520', '#B0C4DE'],
+                # color_discrete_sequence=['#483D8B', '#DAA520', '#B0C4DE'],
+                color_discrete_map={
+                "Diamond": "#483D8B",
+                "Gold": "#DAA520",
+                "Silver": "#B0C4DE"},
                 labels={"type_fan": "Group of creator", "fan": "Subscriber", "avg_view": "Average view"}
                 )
 
