@@ -18,6 +18,7 @@ channel = ['facebook', 'instagram', 'twitter', 'youtube']
 
 df_sunburst = pd.read_csv(DATA_PATH.joinpath("df_sunburst.csv"))
 df_view_vs_fan = pd.read_csv(DATA_PATH.joinpath("df_view_vs_fan.csv"))
+df_view_vs_fan2 = pd.read_csv(DATA_PATH.joinpath("df_view_vs_fan_bk.csv"))
 df_ig_img_video = pd.read_csv(DATA_PATH.joinpath("df_ig_img_video.csv"))
 df_fb_funnel = pd.read_csv(DATA_PATH.joinpath("df_fb_funnel.csv"))
 
@@ -168,6 +169,43 @@ layout = html.Div([
 
                             ], className="row"),
 
+                    # html.Header('Subscriber'),
+                    # # Fan Slider
+                    # dcc.RangeSlider(
+                    #                 id='my-slider1',
+                    #                 min=100000,
+                    #                 max=df_view_vs_fan['fan'].max(),
+                    #                 step=5000,
+                    #                 value=[0, df_view_vs_fan['fan'].max()],
+                    #                 tooltip={"placement": "bottom", "always_visible": True},
+                    #                 marks={
+                    #                         100000: {'label': 'Silver', 'style': {'color': '#000000'}},
+                    #                         999999: {'label': 'Gold', 'style': {'color': '#000000'}},
+                    #                         10000000: {'label': 'Diamond', 'style': {'color': '#000000'}}
+                    #                     }
+                    #                 ),
+
+                    # html.Header('Average View'),
+                    # # View Slider
+                    # dcc.RangeSlider(
+                    #                 id='my-slider2',
+                    #                 min=0,
+                    #                 max=df_view_vs_fan['avg_view'].max(),
+                    #                 step=5000,
+                    #                 value=[0, df_view_vs_fan['avg_view'].max()],
+                    #                 tooltip={"placement": "bottom", "always_visible": True},
+                    #                 marks={
+                    #                         0: {'label': '0%', 'style': {'color': '#000000'}},
+                    #                         df_view_vs_fan['avg_view'].max()*0.25: {'label': '25%', 'style': {'color': '#000000'}},
+                    #                         df_view_vs_fan['avg_view'].max()*0.5: {'label': '50%', 'style': {'color': '#000000'}},
+                    #                         df_view_vs_fan['avg_view'].max()*0.75: {'label': '75%', 'style': {'color': '#000000'}},
+                    #                         int(df_view_vs_fan['avg_view'].max()): {'label': '100%', 'style': {'color': '#000000'}}
+                    #                     }
+                    #                 ),
+
+                    # Scatter graph
+                    dcc.Graph(id="graph7"),
+
                     html.Header('Subscriber'),
                     # Fan Slider
                     dcc.RangeSlider(
@@ -203,7 +241,7 @@ layout = html.Div([
                                     ),
 
                     # Scatter graph
-                    dcc.Graph(id="graph7"),
+                    dcc.Graph(id="graph10")
                 ])
 
 # Set fan_amount dropdown option
@@ -246,14 +284,18 @@ def set_page_value(available_options1, available_options2):
     [Output("graph6", "figure"),
     Output("graph7", "figure"),
     Output("graph8", "figure"),
-    Output("graph9", "figure")], 
+    Output("graph9", "figure"),
+    Output("graph10", "figure")], 
     [Input("page1_filter", "value"),
     Input("page2_filter", "value"),
     Input("categ_filter", "value"),
-    Input("fan_amount_filter", "value"),
+    Input("fan_amount_filter", "value")
+    ,
     Input("my-slider1", "value"),
-    Input("my-slider2", "value")])
+    Input("my-slider2", "value")
+    ])
 def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, fan_slider, view_slider):
+# def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop):
 
     # Sunburst chart
     # color_cat=['', '#ABDEE6', '#CBAACB', 'FFFFB5', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#F6EAC2', '#ECEAE4', '#B5EAD7', '#55CBCD']
@@ -270,10 +312,10 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, fan_slid
 
 
     # Scatter plot
-    slide_filter = ((df_view_vs_fan['fan'] >= fan_slider[0]) & (df_view_vs_fan['fan'] <= fan_slider[1]) 
-                    & (df_view_vs_fan['avg_view'] >= view_slider[0]) & (df_view_vs_fan['avg_view'] <= view_slider[1]))
+    slide_filter = ((df_view_vs_fan2['fan'] >= fan_slider[0]) & (df_view_vs_fan2['fan'] <= fan_slider[1]) 
+                    & (df_view_vs_fan2['avg_view'] >= view_slider[0]) & (df_view_vs_fan2['avg_view'] <= view_slider[1]))
 
-    fig_scatter = px.scatter(df_view_vs_fan.loc[slide_filter].sort_values(by='type_fan'), x="fan", y="avg_view", color="type_fan", 
+    fig_scatter2 = px.scatter(df_view_vs_fan2.loc[slide_filter].sort_values(by='type_fan'), x="fan", y="avg_view", color="type_fan", 
                 hover_data=['account_display_name'], 
                 # facet_col="type_fan",
                 # color_discrete_sequence=['#483D8B', '#DAA520', '#B0C4DE'],
@@ -283,6 +325,20 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, fan_slid
                 "Silver": "#B0C4DE"},
                 labels={"type_fan": "Group of creator", "fan": "Subscriber", "avg_view": "Average view"}
                 )
+
+    # Animation
+    fig_scatter = px.scatter(df_view_vs_fan, x="fan", y="avg_view", color="type_fan",
+                animation_frame="month", animation_group="account_display_name", size="count", size_max=80,
+                range_x=[-1000000,int(df_view_vs_fan['fan'].max() * 1.25)], range_y=[-1000000,int(df_view_vs_fan['avg_view'].max() * 1.25)],
+                hover_data=['account_display_name'], 
+                color_discrete_map={
+                "Diamond": "#483D8B",
+                "Gold": "#DAA520",
+                "Silver": "#A9A9A9"},
+                labels={"type_fan": "Group of creator", "fan": "Subscriber", "avg_view": "Average view"}
+                )
+
+    fig_scatter.update_layout(height=600, width=1250)
 
     # Bar chart
     fig_bar = px.bar(df_ig_img_video, x='avg_engagement', y='post_type', orientation='h', text='avg_engagement', color='post_type', color_discrete_sequence=['#BA55D3', '#A9A9A9'], labels={"post_type": "Post type", "avg_engagement": "Average engagement"})
@@ -324,5 +380,5 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, fan_slid
         texttemplate = "%{value:.2s} <br>(%{percentInitial})"
         ))
 
-    return fig_sunburst, fig_scatter, fig_bar, fig_funnel
+    return fig_sunburst, fig_scatter, fig_bar, fig_funnel, fig_scatter2
 
