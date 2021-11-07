@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 import pathlib
 from app import app
 import base64
+from pandas.api.types import CategoricalDtype
 
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
@@ -18,15 +19,24 @@ channel = ['facebook', 'instagram', 'twitter', 'youtube']
 
 df_sunburst = pd.read_csv(DATA_PATH.joinpath("df_sunburst.csv"))
 df_view_vs_fan = pd.read_csv(DATA_PATH.joinpath("df_view_vs_fan.csv"))
-df_view_vs_fan2 = pd.read_csv(DATA_PATH.joinpath("df_view_vs_fan_bk.csv"))
 df_ig_img_video = pd.read_csv(DATA_PATH.joinpath("df_ig_img_video.csv"))
 df_fb_funnel = pd.read_csv(DATA_PATH.joinpath("df_fb_funnel.csv"))
 
 # change fan_range column to categorical type 
-cats = ['300K-500K', '500K-1M', '1M-9M']
-from pandas.api.types import CategoricalDtype
+cats = ['Less than 0.5M', '0.5M-1M', 'More than 1M']
 cat_type = CategoricalDtype(categories=cats, ordered=True)
 df_fb_funnel['fan_range'] = df_fb_funnel['fan_range'].astype(cat_type)
+
+
+# change fan_type column to categorical type fan_cats = ['Diamond', 'Gold', 'Silver', 'Highlighted']
+fan_cats = ['Diamond', 'Gold', 'Silver', 'Filtered by dropdown']
+fan_type = CategoricalDtype(categories=fan_cats, ordered=True)
+df_view_vs_fan['type_fan'] = df_view_vs_fan['type_fan'].astype(fan_type)
+
+# change fan_type column to categorical type fan_cats = ['Diamond', 'Gold', 'Silver', 'Highlighted']
+month_cats = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+cat_type = CategoricalDtype(categories=month_cats, ordered=True)
+df_view_vs_fan['month'] = df_view_vs_fan['month'].astype(cat_type)
 
 encoded_fb_image = base64.b64encode(open(IMG_PATH.joinpath('fb.png'), 'rb').read())
 encoded_tw_image = base64.b64encode(open(IMG_PATH.joinpath('tw.png'), 'rb').read())
@@ -83,7 +93,7 @@ layout = html.Div([
                             html.Div([
                                         dcc.Dropdown(
                                                         id='fan_amount_filter',
-                                                        value='1M-9M'
+                                                        value='More than 1M'
                                                     )
                                     ],className="five columns")
                                 ], style=dict(display='flex')),
@@ -169,79 +179,23 @@ layout = html.Div([
 
                             ], className="row"),
 
-                    # html.Header('Subscriber'),
-                    # # Fan Slider
-                    # dcc.RangeSlider(
-                    #                 id='my-slider1',
-                    #                 min=100000,
-                    #                 max=df_view_vs_fan['fan'].max(),
-                    #                 step=5000,
-                    #                 value=[0, df_view_vs_fan['fan'].max()],
-                    #                 tooltip={"placement": "bottom", "always_visible": True},
-                    #                 marks={
-                    #                         100000: {'label': 'Silver', 'style': {'color': '#000000'}},
-                    #                         999999: {'label': 'Gold', 'style': {'color': '#000000'}},
-                    #                         10000000: {'label': 'Diamond', 'style': {'color': '#000000'}}
-                    #                     }
-                    #                 ),
+                    html.Div([
 
-                    # html.Header('Average View'),
-                    # # View Slider
-                    # dcc.RangeSlider(
-                    #                 id='my-slider2',
-                    #                 min=0,
-                    #                 max=df_view_vs_fan['avg_view'].max(),
-                    #                 step=5000,
-                    #                 value=[0, df_view_vs_fan['avg_view'].max()],
-                    #                 tooltip={"placement": "bottom", "always_visible": True},
-                    #                 marks={
-                    #                         0: {'label': '0%', 'style': {'color': '#000000'}},
-                    #                         df_view_vs_fan['avg_view'].max()*0.25: {'label': '25%', 'style': {'color': '#000000'}},
-                    #                         df_view_vs_fan['avg_view'].max()*0.5: {'label': '50%', 'style': {'color': '#000000'}},
-                    #                         df_view_vs_fan['avg_view'].max()*0.75: {'label': '75%', 'style': {'color': '#000000'}},
-                    #                         int(df_view_vs_fan['avg_view'].max()): {'label': '100%', 'style': {'color': '#000000'}}
-                    #                     }
-                    #                 ),
+                        html.Div([
+                                    dcc.Dropdown(
+                                                    id='account_filter',
+                                                    options=[{"value": x, "label": x}
+                                                            for x in df_view_vs_fan['account_display_name'].drop_duplicates()],
+                                                    placeholder="Please select account name to focus"
+                                                )
+
+                                ], className="five columns")
+
+                    ], style=dict(display='flex')),
+                    
 
                     # Scatter graph
-                    dcc.Graph(id="graph7"),
-
-                    html.Header('Subscriber'),
-                    # Fan Slider
-                    dcc.RangeSlider(
-                                    id='my-slider1',
-                                    min=100000,
-                                    max=df_view_vs_fan['fan'].max(),
-                                    step=5000,
-                                    value=[0, df_view_vs_fan['fan'].max()],
-                                    tooltip={"placement": "bottom", "always_visible": True},
-                                    marks={
-                                            100000: {'label': 'Silver', 'style': {'color': '#000000'}},
-                                            999999: {'label': 'Gold', 'style': {'color': '#000000'}},
-                                            10000000: {'label': 'Diamond', 'style': {'color': '#000000'}}
-                                        }
-                                    ),
-
-                    html.Header('Average View'),
-                    # View Slider
-                    dcc.RangeSlider(
-                                    id='my-slider2',
-                                    min=0,
-                                    max=df_view_vs_fan['avg_view'].max(),
-                                    step=5000,
-                                    value=[0, df_view_vs_fan['avg_view'].max()],
-                                    tooltip={"placement": "bottom", "always_visible": True},
-                                    marks={
-                                            0: {'label': '0%', 'style': {'color': '#000000'}},
-                                            df_view_vs_fan['avg_view'].max()*0.25: {'label': '25%', 'style': {'color': '#000000'}},
-                                            df_view_vs_fan['avg_view'].max()*0.5: {'label': '50%', 'style': {'color': '#000000'}},
-                                            df_view_vs_fan['avg_view'].max()*0.75: {'label': '75%', 'style': {'color': '#000000'}},
-                                            int(df_view_vs_fan['avg_view'].max()): {'label': '100%', 'style': {'color': '#000000'}}
-                                        }
-                                    ),
-
-                    # Scatter graph
-                    dcc.Graph(id="graph10")
+                    dcc.Graph(id="graph7")
                 ])
 
 # Set fan_amount dropdown option
@@ -284,21 +238,16 @@ def set_page_value(available_options1, available_options2):
     [Output("graph6", "figure"),
     Output("graph7", "figure"),
     Output("graph8", "figure"),
-    Output("graph9", "figure"),
-    Output("graph10", "figure")], 
+    Output("graph9", "figure")], 
     [Input("page1_filter", "value"),
     Input("page2_filter", "value"),
     Input("categ_filter", "value"),
-    Input("fan_amount_filter", "value")
-    ,
-    Input("my-slider1", "value"),
-    Input("my-slider2", "value")
+    Input("fan_amount_filter", "value"),
+    Input("account_filter", "value")
     ])
-def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, fan_slider, view_slider):
-# def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop):
+def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_drop):
 
     # Sunburst chart
-    # color_cat=['', '#ABDEE6', '#CBAACB', 'FFFFB5', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#F6EAC2', '#ECEAE4', '#B5EAD7', '#55CBCD']
     color_cat=['', '#ABDEE6', '#CBAACB', '#f8de7e', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#a9ba9d', '#b5b9ff', '#B5EAD7', '#55CBCD']
     fig_sunburst =go.Figure(go.Sunburst(
         labels=df_sunburst['All_label'].to_list(),
@@ -311,34 +260,40 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, fan_slid
     fig_sunburst.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=22)
 
 
-    # Scatter plot
-    slide_filter = ((df_view_vs_fan2['fan'] >= fan_slider[0]) & (df_view_vs_fan2['fan'] <= fan_slider[1]) 
-                    & (df_view_vs_fan2['avg_view'] >= view_slider[0]) & (df_view_vs_fan2['avg_view'] <= view_slider[1]))
+    # Animated Scatter plot
+    filter_account = df_view_vs_fan['account_display_name'] == account_drop
 
-    fig_scatter2 = px.scatter(df_view_vs_fan2.loc[slide_filter].sort_values(by='type_fan'), x="fan", y="avg_view", color="type_fan", 
-                hover_data=['account_display_name'], 
-                # facet_col="type_fan",
-                # color_discrete_sequence=['#483D8B', '#DAA520', '#B0C4DE'],
-                color_discrete_map={
-                "Diamond": "#483D8B",
-                "Gold": "#DAA520",
-                "Silver": "#B0C4DE"},
-                labels={"type_fan": "Group of creator", "fan": "Subscriber", "avg_view": "Average view"}
-                )
+    # Set annotation_text only for filtered account
+    df_view_vs_fan['annotation_text'] = ''
+    df_view_vs_fan.loc[filter_account, 'annotation_text'] = account_drop
 
-    # Animation
-    fig_scatter = px.scatter(df_view_vs_fan, x="fan", y="avg_view", color="type_fan",
+    df_focus = df_view_vs_fan.copy()
+
+    # Set type_fan = 'Filtered by dropdown' only for filtered account
+    df_focus.loc[filter_account, 'type_fan'] = 'Filtered by dropdown'
+
+    df_focus = df_focus.sort_values(by=['type_fan', 'account_display_name', 'month'])
+
+    fig_scatter = px.scatter(df_focus, x="fan", y="avg_view", color="type_fan",
                 animation_frame="month", animation_group="account_display_name", size="count", size_max=80,
-                range_x=[-1000000,int(df_view_vs_fan['fan'].max() * 1.25)], range_y=[-1000000,int(df_view_vs_fan['avg_view'].max() * 1.25)],
+                range_x=[-1000000,int(df_focus['fan'].max() * 1.25)], range_y=[-1000000,int(df_focus['avg_view'].max() * 1.25)],
                 hover_data=['account_display_name'], 
+                text='annotation_text',
                 color_discrete_map={
                 "Diamond": "#483D8B",
                 "Gold": "#DAA520",
-                "Silver": "#A9A9A9"},
+                "Silver": "#A9A9A9",
+                "Filtered by dropdown":"#CD5C5C"},
                 labels={"type_fan": "Group of creator", "fan": "Subscriber", "avg_view": "Average view"}
                 )
 
+    fig_scatter.update_traces(textposition='top center')
     fig_scatter.update_layout(height=600, width=1250)
+
+    # Update graph every frame of animation
+    for button in fig_scatter.layout.updatemenus[0].buttons:
+        button['args'][1]['frame']['redraw'] = True
+
 
     # Bar chart
     fig_bar = px.bar(df_ig_img_video, x='avg_engagement', y='post_type', orientation='h', text='avg_engagement', color='post_type', color_discrete_sequence=['#BA55D3', '#A9A9A9'], labels={"post_type": "Post type", "avg_engagement": "Average engagement"})
@@ -380,5 +335,5 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, fan_slid
         texttemplate = "%{value:.2s} <br>(%{percentInitial})"
         ))
 
-    return fig_sunburst, fig_scatter, fig_bar, fig_funnel, fig_scatter2
+    return fig_sunburst, fig_scatter, fig_bar, fig_funnel
 

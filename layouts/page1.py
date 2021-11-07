@@ -76,7 +76,7 @@ layout = html.Div([
                                     id='mapped_name',
                                     options=[{"value": x, "label": x}
                                             for x in df_unique_name_channel['mapped_name'].drop_duplicates()],
-                                    value='Money Buffalo'
+                                    value='Kayavine'
                                     ),
 
                         dcc.Graph(id="graph5"),
@@ -121,15 +121,15 @@ def change_filter(channel_drop, channel_drop2, top_drop, mapped_name):
 
     # Donut graph1
     fig_donut = go.Figure(data=[go.Pie(labels=df_channel_engagement['channel'], values=df_channel_engagement['account_id'], hole=.5, marker_colors=donut_colors, sort=False)])
-    fig_donut.update_layout(annotations=[dict(text='Channel', x=0.5, y=0.5, font_size=20, showarrow=False)])
+    fig_donut.update_layout(annotations=[dict(text='', x=0.5, y=0.5, font_size=20, showarrow=False)])
 
     # Donut graph2
     fig_donut2 = go.Figure(data=[go.Pie(labels=df_channel_engagement['channel'], values=df_channel_engagement['new_engagement'], hole=.5, marker_colors=donut_colors, sort=False)])
-    fig_donut2.update_layout(annotations=[dict(text='Channel', x=0.5, y=0.5, font_size=20, showarrow=False)])
+    fig_donut2.update_layout(annotations=[dict(text='', x=0.5, y=0.5, font_size=20, showarrow=False)])
 
     # Heatmap chart graph3
     fig_heat3 = px.imshow(df_day_vs_time.loc[channel_drop],
-                labels=dict(y="Day of Week", x="Time of Day", color="Engagment(%)"),
+                labels=dict(y="Day of Week", x="Time of Day", color="Engagment"),
                 x=df_day_vs_time.columns,
                 y=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
                 color_continuous_scale='blues'
