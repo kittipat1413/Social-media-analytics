@@ -276,7 +276,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
 
     fig_scatter = px.scatter(df_focus, x="fan", y="avg_view", color="type_fan",
                 animation_frame="month", animation_group="account_display_name", size="count", size_max=80,
-                range_x=[-1000000,int(df_focus['fan'].max() * 1.25)], range_y=[-1000000,int(df_focus['avg_view'].max() * 1.25)],
+                range_x=[int(df_focus['fan'].max() * -0.0714),int(df_focus['fan'].max() * 1.25)], range_y=[int(df_focus['avg_view'].max()* -0.15),int(df_focus['avg_view'].max() * 1.25)],
                 hover_data=['account_display_name'], 
                 text='annotation_text',
                 color_discrete_map={
@@ -288,7 +288,8 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
                 )
 
     fig_scatter.update_traces(textposition='top center')
-    fig_scatter.update_layout(height=600, width=1250)
+    fig_scatter.update_layout(height=600, width=1250, 
+                              title_text = 'Size of bubble denotes frequency of video upload', title_x =0.88)
 
     # Update graph every frame of animation
     for button in fig_scatter.layout.updatemenus[0].buttons:
