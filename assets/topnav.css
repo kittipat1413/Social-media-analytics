@@ -1,4 +1,7 @@
-body {margin: auto;}
+body {
+  background-color:#363535;
+  font-family: "Open Sans", verdana, arial, sans-serif;
+}
 
 /* Add a background color to the top navigation */
 .topnav {

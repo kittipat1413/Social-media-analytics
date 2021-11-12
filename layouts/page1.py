@@ -23,23 +23,36 @@ layout = html.Div([
                     html.Div([
                         # First part in row
                         html.Div([
+                            html.Div([
                             html.H2("Most popular channel by influencer"),
                             dcc.Graph(id="graph")
-                                ], className="six columns"),
+                            ], className="box")
+                        ],style={
+                                'margin': 'auto',
+                                'width': '50%',
+                            }
+                        , className="six columns"),
 
                         # Second part in row
                         html.Div([
+                            html.Div([
                             html.H2("Most popular channel by engagement"),
                             dcc.Graph(id="graph2")
-                                ], className="six columns"),
+                            ], className="box")
+                        ],style={
+                                'margin': 'auto',
+                                'width': '50%',
+                            },
+                        className="six columns"),
 
-                            ], className="row"),
+                        ], className="row"),
 
                     # Second row
                     html.Div([
                         
                         # First part in row
                         html.Div([
+                            html.Div([
                             html.H2("Best time to post by channel"),
 
                             dcc.Dropdown(
@@ -51,8 +64,9 @@ layout = html.Div([
 
                             dcc.Graph(id="graph3")
                                 ]),
+                            ], className="box")
 
-                            ], className="row")
+                    ], className="row")
                 ])
 
 @app.callback(

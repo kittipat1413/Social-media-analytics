@@ -23,7 +23,6 @@ layout = html.Div([
                     html.Div([
                         # First part in row
                         html.Div([
-
                             html.H2("Most popular influencers by channel"),
                             
                             dcc.Dropdown(
@@ -41,54 +40,63 @@ layout = html.Div([
                                         ),
 
                             dcc.Graph(id="graph4")
+                                
+                            ],className="box",
+                            style={
+                                'width': '100%',
+                            })
 
-                                ]),
-
-                            ], className="row"),
+                        ], className="customrow"),
 
                     # Second row
                     html.Div([
                         # First part in row
                         html.Div([
-                            html.H2("Comparing performance between image and video post in Instagram"),
-                            dcc.Graph(id="graph5")
-                        ], className="four columns"),
+                                html.H3("Comparing performance between image and video post in Instagram"),                             
+                                html.Br(),
+                                dcc.Graph(id="graph5")
+                            ],className="box",
+                            style={
+                                'width': '35%',
+                            }),
 
                         # Second part in row
-                        html.Div([
                         
-                            html.H2("Comparing performance between pages in same catagory of Facebook"),
-
-                            html.Div([
-
+                        html.Div([
+                                html.H3("Comparing performance between pages in same catagory of Facebook"),
+                                html.Br(),
                                 html.Div([
+                                    html.Div([
 
-                                    dcc.Dropdown(
-                                                id='page1_filter',
-                                                options=[{"value": x, "label": x}
-                                                        for x in df_fb_funnel['account_display_name'].drop_duplicates()],
-                                                value='ปันโปร - Punpromotion'
-                                                )
-                                                ], className="five columns"),
+                                        dcc.Dropdown(
+                                                    id='page1_filter',
+                                                    options=[{"value": x, "label": x}
+                                                            for x in df_fb_funnel['account_display_name'].drop_duplicates()],
+                                                    value='ปันโปร - Punpromotion'
+                                                    )
+                                                    ], className="five columns"),
 
-                                html.Div([
+                                    html.Div([
 
-                                    dcc.Dropdown(
-                                                id='page2_filter',
-                                                options=[{"value": x, "label": x}
-                                                for x in df_fb_funnel['account_display_name'].drop_duplicates()],
-                                                value='SALE HERE'
-                                                )]
-                                                
-                                                , className="five columns")],
-                             className="row"),
+                                        dcc.Dropdown(
+                                                    id='page2_filter',
+                                                    options=[{"value": x, "label": x}
+                                                    for x in df_fb_funnel['account_display_name'].drop_duplicates()],
+                                                    value='SALE HERE'
+                                                    )
+                                                    ], className="five columns")],
+                                className="row"),
 
-                            dcc.Graph(id="graph6")
-                        ], className="eight columns"),
-
-                    ], className="row"),
-
+                                dcc.Graph(id="graph6")],className="box",
+                                style={
+                                'width': '65%',
+                            })
+                            
+                    ],
+                    className="customrow"),
+                    
                     # # Third row
+
                     # html.Div([
                     #     # First part in row
                     #     html.Div([
