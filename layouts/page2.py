@@ -122,7 +122,11 @@ layout = html.Div([
                                 className="row"),
 
                             # Funnel graph
-                            dcc.Graph(id="graph9")
+                            dcc.Loading(
+                                        id="loading-1",
+                                        type="default",
+                                        children= dcc.Graph(id="graph9")
+                                       )
                         
                         ],className="box"),
                     ],style={
@@ -150,7 +154,11 @@ layout = html.Div([
                                     ], className="row"),
 
                             # Bar graph
-                            dcc.Graph(id="graph8"),
+                            dcc.Loading(
+                                        id="loading-1",
+                                        type="default",
+                                        children= dcc.Graph(id="graph8")
+                                       )
 
                         ],className="box"),
                     ],style={
@@ -178,7 +186,11 @@ layout = html.Div([
                                     ], className="row"),
 
                             # Sunburst graph
-                            dcc.Graph(id="graph6"),
+                            dcc.Loading(
+                                        id="loading-1",
+                                        type="default",
+                                        children= dcc.Graph(id="graph6")
+                                       )
                         ],className="box"),
                     ],style={
                             'padding-bottom': '0.5%'
@@ -219,7 +231,11 @@ layout = html.Div([
                             ], style=dict(display='flex')),
                     
                             # Scatter graph
-                            dcc.Graph(id="graph7")
+                            dcc.Loading(
+                                        id="loading-1",
+                                        type="default",
+                                        children= dcc.Graph(id="graph7")
+                                       )
 
                         ],className="box"),
                     ],style={

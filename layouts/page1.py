@@ -31,7 +31,11 @@ layout = html.Div([
                             children=[
                             html.Div([
                             html.H2("Most popular social media platform by account"),
-                            dcc.Graph(id="graph")
+                            dcc.Loading(
+                                        id="loading-1",
+                                        type="default",
+                                        children= dcc.Graph(id="graph")
+                                       )
                                 ], className="box")
                                 
                             ],style={
@@ -45,7 +49,11 @@ layout = html.Div([
                             children=[
                             html.Div([
                             html.H2("Most popular social media platform by engagement"),
-                            dcc.Graph(id="graph2")
+                            dcc.Loading(
+                                        id="loading-1",
+                                        type="default",
+                                        children= dcc.Graph(id="graph2")
+                                       )
                             ],className="box")
 
                         ],style={
@@ -74,7 +82,11 @@ layout = html.Div([
                                         value='5'
                                         ),
 
-                            dcc.Graph(id="graph4")
+                            dcc.Loading(
+                                        id="loading-1",
+                                        type="default",
+                                        children= dcc.Graph(id="graph4")
+                                       )
 
                         ],className="box"),
 
@@ -93,8 +105,11 @@ layout = html.Div([
                                                 for x in df_unique_name_channel['mapped_name'].drop_duplicates()],
                                         value='Kayavine'
                                         ),
-
-                            dcc.Graph(id="graph5")
+                            dcc.Loading(
+                                        id="loading-1",
+                                        type="default",
+                                        children= dcc.Graph(id="graph5")
+                                       )
 
                         ],className="box"),
                     ],style={
@@ -114,8 +129,11 @@ layout = html.Div([
                                         value='facebook'
                                         ),
 
-                            dcc.Graph(id="graph3")
-                            
+                            dcc.Loading(
+                                        id="loading-1",
+                                        type="default",
+                                        children= dcc.Graph(id="graph3")
+                                       )
                         ],className="box"),
                     ],style={
                             'padding-bottom': '0.5%'
