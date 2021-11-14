@@ -16,7 +16,7 @@ app.layout = html.Div([
         dcc.Link(' Overview ',id='page1', href='/page1'),
         dcc.Link(' Detail ',id='page2', href='/page2'),
     ], className="topnav"),
-    dcc.Loading(type="default",fullscreen=True, style={'backgroundColor': 'transparent'},children=html.Div(id='page-content'))
+    html.Div(id='page-content')
 ])
 
 

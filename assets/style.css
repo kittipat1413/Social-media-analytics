@@ -1,0 +1,25 @@
+body {
+    margin: auto;
+    background-color: #e8f0f9;
+    font-family: 'Comic Sans MS', cursive;
+  }
+  
+.box {
+    border-radius: 20px;
+    background-color: white;
+    margin: 10px;
+    padding: 25px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  }
+
+.customrow{
+    display: flex;
+    justify-content: center;
+}
+  
+#left-column {
+    padding: 0.5%;
+}
+#right-column {
+    padding: 0.5%;
+}

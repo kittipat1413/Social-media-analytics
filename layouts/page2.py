@@ -47,155 +47,187 @@ layout = html.Div([
                 
                     # First Header
                     html.Div([
-
-                        # First row
-                        html.Div([
-                            # First part in row
+                        html.Div([ 
+                            # First row
                             html.Div([
-                                        html.Img(src='data:image/png;base64,{}'.format(encoded_fb_image.decode()), height=80)
-                                    ], className="one column"),
+                                # First part in row
+                                html.Div([
+                                            html.Img(src='data:image/png;base64,{}'.format(encoded_fb_image.decode()), height=80)
+                                        ], className="one column"),
 
-                            # Second part in row
+                                # Second part in row
+                                html.Div([
+                                            html.H2("Performance between accounts by category")
+                                        ], className="eleven columns")
+                                
+                                    ], className="row"),
+
+                            # Second row
                             html.Div([
-                                        html.H2("Performance between accounts by category")
-                                    ], className="eleven columns")
-                            
-                                ], className="row"),
+                                # First part in row
+                                html.Div([
+                                            html.H5("Category")
+                                        ]),
+                                # Second part in row
+                                html.Div([
+                                            dcc.Dropdown(
+                                                            id='categ_filter',
+                                                            options=[{"value": x, "label": x}
+                                                                    for x in df_fb_funnel['category'].drop_duplicates()],
+                                                            value='Sales and review',
+                                                            
+                                                        )
+                                        ], className="five columns")
 
-                        # Second row
-                        html.Div([
-                            # First part in row
+                                    ], style=dict(display='flex')),
+
+                            # Third row
                             html.Div([
-                                        html.H5("Category")
-                                    ]),
-                            # Second part in row
+
+                                # First part in row
+                                html.Div([
+                                            html.H5("Fan range")
+                                        ]),
+                                        
+                                # Second part in row
+                                html.Div([
+                                            dcc.Dropdown(
+                                                            id='fan_amount_filter',
+                                                            value='More than 1M'
+                                                        )
+                                        ],className="five columns")
+                                    ], style=dict(display='flex')),
+
+                            #Forth row
                             html.Div([
-                                        dcc.Dropdown(
-                                                        id='categ_filter',
-                                                        options=[{"value": x, "label": x}
-                                                                for x in df_fb_funnel['category'].drop_duplicates()],
-                                                        value='Sales and review',
-                                                        
-                                                    )
-                                    ], className="five columns")
+                                
+                                # First part in row
+                                html.Div([
+                                    html.H5("Account1"),
+                                    dcc.Dropdown(
+                                                id='page1_filter',
+                                                value='ปันโปร Punpromotion'
+                                                )], 
+                                                
+                                                className="five columns"),
+                                # Second part in row
+                                html.Div([
+                                    html.H5("Account2"),
+                                    dcc.Dropdown(
+                                                id='page2_filter',
+                                                value='SALE HERE'
+                                                )]
+                                                
+                                                , className="five columns")],
+                                className="row"),
 
-                                ], style=dict(display='flex')),
+                            # Funnel graph
+                            dcc.Graph(id="graph9")
+                        
+                        ],className="box"),
+                    ],style={
+                            'padding-top': '0.5%',
+                            'padding-bottom': '0.5%'
+                    }, className="row"),
 
-                        # Third row
-                        html.Div([
 
-                            # First part in row
-                            html.Div([
-                                        html.H5("Fan range")
-                                    ]),
-                                       
-                            # Second part in row
-                            html.Div([
-                                        dcc.Dropdown(
-                                                        id='fan_amount_filter',
-                                                        value='More than 1M'
-                                                    )
-                                    ],className="five columns")
-                                ], style=dict(display='flex')),
-
-                        #Forth row
-                        html.Div([
-                            
-                            # First part in row
-                            html.Div([
-                                html.H5("Account1"),
-                                dcc.Dropdown(
-                                            id='page1_filter',
-                                            value='ปันโปร Punpromotion'
-                                            )], 
-                                            
-                                            className="five columns"),
-                            # Second part in row
-                            html.Div([
-                                html.H5("Account2"),
-                                dcc.Dropdown(
-                                            id='page2_filter',
-                                            value='SALE HERE'
-                                            )]
-                                            
-                                            , className="five columns")],
-                            className="row"),
-
-                        # Funnel graph
-                        dcc.Graph(id="graph9")
-                        ,
-
-                    ], className="row"),
 
                     # Second Header
                     html.Div([
-                        # First part in row
                         html.Div([
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_ig_image.decode()), height=80)
+                            html.Div([
+                                # First part in row
+                                html.Div([
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_ig_image.decode()), height=80)
 
-                                ], className="one column"),
+                                        ], className="one column"),
 
-                        # Second part in row
-                        html.Div([
-                                    html.H2("Performance between image and video post")
-                                ], className="nine columns")
+                                # Second part in row
+                                html.Div([
+                                            html.H2("Performance between image and video post")
+                                        ], className="nine columns")
 
-                            ], className="row"),
+                                    ], className="row"),
 
-                    # Bar graph
-                    dcc.Graph(id="graph8"),
+                            # Bar graph
+                            dcc.Graph(id="graph8"),
+
+                        ],className="box"),
+                    ],style={
+                            'padding-bottom': '0.5%'
+                    }, className="row"),
+
+
+
 
                     # Third header
                     html.Div([
-                        
-                        # First part in row    
                         html.Div([
-                                    html.Img(src='data:image/png;base64,{}'.format(encoded_tw_image.decode()), height=80)
-                                ], className="one column"),
+                            html.Div([
+                                
+                                # First part in row    
+                                html.Div([
+                                            html.Img(src='data:image/png;base64,{}'.format(encoded_tw_image.decode()), height=80)
+                                        ], className="one column"),
 
-                        # Second part in row
-                        html.Div([
-                                    html.H2("Most popular twitter hashtag in 2020")
-                                ], className="six columns")
-                        
-                            ], className="row"),
+                                # Second part in row
+                                html.Div([
+                                            html.H2("Most popular twitter hashtag in 2020")
+                                        ], className="six columns")
+                                
+                                    ], className="row"),
 
-                    # Sunburst graph
-                    dcc.Graph(id="graph6"),
-                    
+                            # Sunburst graph
+                            dcc.Graph(id="graph6"),
+                        ],className="box"),
+                    ],style={
+                            'padding-bottom': '0.5%'
+                    }, className="row"),
+
+
+
 
                     # Forth Header
                     html.Div([
-
-                        # First part in row
                         html.Div([
-                            html.Img(src='data:image/png;base64,{}'.format(encoded_yt_image.decode()), height=60)
-                                ], className="one column"),
-                                
-                        # Second part in row
-                        html.Div([
-                                    html.H2("Relationship between view on average and number of subscriber")
-                                ], className="ten columns")
+                            html.Div([
 
-                            ], className="row"),
+                                # First part in row
+                                html.Div([
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_yt_image.decode()), height=60)
+                                        ], className="one column"),
+                                        
+                                # Second part in row
+                                html.Div([
+                                            html.H2("Relationship between view on average and number of subscriber")
+                                        ], className="ten columns")
 
-                    html.Div([
+                                    ], className="row"),
 
-                        html.Div([
-                                    dcc.Dropdown(
-                                                    id='account_filter',
-                                                    options=[{"value": x, "label": x}
-                                                            for x in df_view_vs_fan['account_display_name'].drop_duplicates()],
-                                                    placeholder="Please select account name to focus"
-                                                )
+                            html.Div([
 
-                                ], className="five columns")
+                                html.Div([
+                                            dcc.Dropdown(
+                                                            id='account_filter',
+                                                            options=[{"value": x, "label": x}
+                                                                    for x in df_view_vs_fan['account_display_name'].drop_duplicates()],
+                                                            placeholder="Please select account name to focus"
+                                                        )
 
-                    ], style=dict(display='flex')),
+                                        ], className="five columns")
+
+                            ], style=dict(display='flex')),
                     
+                            # Scatter graph
+                            dcc.Graph(id="graph7")
 
-                    # Scatter graph
-                    dcc.Graph(id="graph7")
+                        ],className="box"),
+                    ],style={
+                            'padding-bottom': '0.5%'
+                    }, className="row"),
+
+
+
                 ])
 
 # Set fan_amount dropdown option
@@ -288,8 +320,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
                 )
 
     fig_scatter.update_traces(textposition='top center')
-    fig_scatter.update_layout(height=600, width=1250, 
-                              title_text = 'Size of bubble denotes frequency of video upload', title_x =0.88)
+    fig_scatter.update_layout(title_text = 'Size of bubble denotes frequency of video upload', title_x =0.88)
 
     # Update graph every frame of animation
     for button in fig_scatter.layout.updatemenus[0].buttons:

@@ -26,22 +26,37 @@ layout = html.Div([
                     # First row
                     html.Div([
                         # First part in row
-                        html.Div([
+                        html.Div(
+                            id="left-column",
+                            children=[
+                            html.Div([
                             html.H2("Most popular social media platform by account"),
                             dcc.Graph(id="graph")
-                                ], className="six columns"),
+                                ], className="box")
+                                
+                            ],style={
+                            'margin-left': '0',
+                            },
+                            className="six columns"),
 
                         # Second part in row
-                        html.Div([
+                        html.Div(
+                            id="right-column",
+                            children=[
+                            html.Div([
                             html.H2("Most popular social media platform by engagement"),
                             dcc.Graph(id="graph2")
-                                ], className="six columns"),
+                            ],className="box")
 
-                            ], className="row"),
+                        ],style={
+                            'margin-left': '0',
+                        },
+                        className="six columns"),
+
+                    ], className="row"),
 
                     # Second row
-                    html.Div([
-                        
+                    html.Div([ 
                         html.Div([
                             html.H2("Top account by platform"),
 
@@ -61,31 +76,33 @@ layout = html.Div([
 
                             dcc.Graph(id="graph4")
 
-                                ]),
+                        ],className="box"),
 
-                            ], className="row"),
+                    ],style={
+                            'padding-bottom': '0.5%'
+                    }, className="row"),
 
                     # Third row
-                    html.Div([
-                        
-                        # First part in row
-                        
-                        html.H2("Fan growth by account in 2020"),
+                    html.Div([ 
+                        html.Div([
+                            html.H2("Fan growth by account in 2020"),
 
-                        dcc.Dropdown(
-                                    id='mapped_name',
-                                    options=[{"value": x, "label": x}
-                                            for x in df_unique_name_channel['mapped_name'].drop_duplicates()],
-                                    value='Kayavine'
-                                    ),
+                            dcc.Dropdown(
+                                        id='mapped_name',
+                                        options=[{"value": x, "label": x}
+                                                for x in df_unique_name_channel['mapped_name'].drop_duplicates()],
+                                        value='Kayavine'
+                                        ),
 
-                        dcc.Graph(id="graph5"),
+                            dcc.Graph(id="graph5")
 
-                            ], className="row"),
+                        ],className="box"),
+                    ],style={
+                            'padding-bottom': '0.5%'
+                    }, className="row"),
 
                     # Forth row
-                    html.Div([
-                        
+                    html.Div([ 
                         # First part in row
                         html.Div([
                             html.H2("Best time to post on social media"),
@@ -98,10 +115,11 @@ layout = html.Div([
                                         ),
 
                             dcc.Graph(id="graph3")
-                                ]),
                             
-
-                            ], className="row")
+                        ],className="box"),
+                    ],style={
+                            'padding-bottom': '0.5%'
+                    }, className="row")
                 ])
 
 @app.callback(
