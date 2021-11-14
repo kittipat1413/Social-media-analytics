@@ -27,3 +27,29 @@
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
   }
+  #gh-link {
+    text-decoration: none;
+    font-size: 17px;
+    font-family: sans-serif;
+    color: #fff;
+    border: solid 1px#fff;
+    border-radius: 2px;
+    padding: 2px;
+    padding-top: 2px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-weight: 100;
+    position: relative;
+    top: 12px;
+    float: right;
+    margin-right: 20px;
+    margin-left: 0;
+    transition-duration: 400ms;
+  }
+  #gh-img {
+    height: 40px;
+    float: right;
+    margin-top: 8px;
+    margin-right: 8px;
+    transition-duration: 500ms;
+  }
