@@ -68,19 +68,46 @@ layout = html.Div([
                         html.Div([
                             html.H2("Top account by platform"),
 
-                            dcc.Dropdown(
-                                        id='channel2',
-                                        options=[{"value": x, "label": x}
-                                                for x in channel],
-                                        value='youtube'
-                                        ),
+                            # Row
+                            html.Div([
 
-                            dcc.Dropdown(
-                                        id='top_filter',
-                                        options=[{"value": x, "label": "Top " + str(x) }
-                                        for x in range(5,16,5)],
-                                        value='5'
-                                        ),
+                                # First part in row
+                                html.Div([
+                                            html.H5("Platform")
+                                        ], className="one columns"),
+
+                                # Second part in row
+                                html.Div([
+                                            dcc.Dropdown(
+                                                        id='channel2',
+                                                        options=[{"value": x, "label": x}
+                                                                for x in channel],
+                                                        value='youtube'
+                                                        )
+                                        ], className="three columns")
+
+                                    ], style=dict(display='flex')),
+
+
+                            # Row
+                            html.Div([
+
+                                # First part in row
+                                html.Div([
+                                            html.H5("Top")
+                                        ], className="one columns"),
+
+                                # Second part in row
+                                html.Div([
+                                            dcc.Dropdown(
+                                                        id='top_filter',
+                                                        options=[{"value": x, "label": "Top " + str(x) }
+                                                        for x in range(5,16,5)],
+                                                        value='5'
+                                                        )
+                                        ], className="three columns")
+
+                                    ], style=dict(display='flex')),
 
                             dcc.Loading(
                                         id="loading-1",
@@ -99,12 +126,26 @@ layout = html.Div([
                         html.Div([
                             html.H2("Fan growth by account in 2020"),
 
-                            dcc.Dropdown(
-                                        id='mapped_name',
-                                        options=[{"value": x, "label": x}
-                                                for x in df_unique_name_channel['mapped_name'].drop_duplicates()],
-                                        value='Kayavine'
-                                        ),
+                            # Row
+                            html.Div([
+
+                                # First part in row
+                                html.Div([
+                                            html.H5("Account")
+                                        ], className="one columns"),
+
+                                # Second part in row
+                                html.Div([
+                                            dcc.Dropdown(
+                                                        id='mapped_name',
+                                                        options=[{"value": x, "label": x}
+                                                                for x in df_unique_name_channel['mapped_name'].drop_duplicates()],
+                                                        value='Kayavine'
+                                                        )
+                                        ], className="four columns")
+
+                                    ], style=dict(display='flex')),
+
                             dcc.Loading(
                                         id="loading-1",
                                         type="default",
@@ -118,16 +159,30 @@ layout = html.Div([
 
                     # Forth row
                     html.Div([ 
+
                         # First part in row
                         html.Div([
                             html.H2("Best time to post on social media"),
 
-                            dcc.Dropdown(
-                                        id='channel',
-                                        options=[{"value": x, "label": x}
-                                                for x in channel],
-                                        value='facebook'
-                                        ),
+                            # Row
+                            html.Div([
+
+                                # First part in row
+                                html.Div([
+                                            html.H5("Platform")
+                                        ], className="one columns"),
+
+                                # Second part in row
+                                html.Div([
+                                            dcc.Dropdown(
+                                                        id='channel',
+                                                        options=[{"value": x, "label": x}
+                                                                for x in channel],
+                                                        value='facebook'
+                                                        )
+                                        ], className="three columns")
+
+                                    ], style=dict(display='flex')),
 
                             dcc.Loading(
                                         id="loading-1",
@@ -207,7 +262,8 @@ def change_filter(channel_drop, channel_drop2, top_drop, mapped_name):
 
     # Line chart
     # Define row and column for subplot
-    fig_line = make_subplots(rows=4, cols=1)
+    fig_line = make_subplots(rows=4, cols=1,
+                             subplot_titles=("Facebook", "Instagram", "Twitter", "Youtube"))
 
     df_mapped_name = df_unique_name_channel.loc[df_unique_name_channel['mapped_name'] == mapped_name]
     for index in range(len(df_mapped_name)):

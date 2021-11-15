@@ -53,7 +53,7 @@ layout = html.Div([
                                 # First part in row
                                 html.Div([
                                             html.Img(src='data:image/png;base64,{}'.format(encoded_fb_image.decode()), height=80)
-                                        ], className="one column"),
+                                        ], className="one columns"),
 
                                 # Second part in row
                                 html.Div([
@@ -67,7 +67,7 @@ layout = html.Div([
                                 # First part in row
                                 html.Div([
                                             html.H5("Category")
-                                        ]),
+                                        ], className="two columns"),
                                 # Second part in row
                                 html.Div([
                                             dcc.Dropdown(
@@ -87,7 +87,7 @@ layout = html.Div([
                                 # First part in row
                                 html.Div([
                                             html.H5("Fan range")
-                                        ]),
+                                        ], className="two columns"),
                                         
                                 # Second part in row
                                 html.Div([
@@ -302,6 +302,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
         parents=df_sunburst['Parent'].to_list(),
         values=df_sunburst['Value'].to_list(),
         branchvalues='total',
+        textinfo='label+value',
         maxdepth=2,
         marker_colors= color_cat
     ))
