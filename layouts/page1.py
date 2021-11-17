@@ -107,7 +107,7 @@ layout = html.Div([
                                                         )
                                         ], className="three columns")
 
-                                    ], style=dict(display='flex')),
+                                    ], className="row"),
 
                             dcc.Loading(
                                         id="loading-1",
@@ -124,7 +124,7 @@ layout = html.Div([
                     # Third row
                     html.Div([ 
                         html.Div([
-                            html.H2("Fan growth by account in 2020"),
+                            html.H2("Fan growth by account"),
 
                             # Row
                             html.Div([

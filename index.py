@@ -22,7 +22,7 @@ app.layout = html.Div([
        
     ], className="topnav"),
     html.Div(id='page-content')
-])
+],style={'padding-top': '55px'})
 
 
 @app.callback([Output('page-content', 'children'),Output('page1', 'className'),Output('page2', 'className')],

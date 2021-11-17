@@ -57,7 +57,7 @@ layout = html.Div([
 
                                 # Second part in row
                                 html.Div([
-                                            html.H2("Performance between accounts by category")
+                                            html.H2("Performance comparison between accounts by category")
                                         ], className="eleven columns")
                                 
                                     ], className="row"),
@@ -148,7 +148,7 @@ layout = html.Div([
 
                                 # Second part in row
                                 html.Div([
-                                            html.H2("Performance between image and video post")
+                                            html.H2("Performance comparison between image and video post")
                                         ], className="nine columns")
 
                                     ], className="row"),
@@ -180,8 +180,8 @@ layout = html.Div([
 
                                 # Second part in row
                                 html.Div([
-                                            html.H2("Most popular twitter hashtag in 2020")
-                                        ], className="six columns")
+                                            html.H2("Most popular twitter hashtag by hashtag count")
+                                        ], className="nine columns")
                                 
                                     ], className="row"),
 
@@ -206,18 +206,25 @@ layout = html.Div([
 
                                 # First part in row
                                 html.Div([
-                                    html.Img(src='data:image/png;base64,{}'.format(encoded_yt_image.decode()), height=60)
+                                    html.Img(src='data:image/png;base64,{}'.format(encoded_yt_image.decode()), height=80)
                                         ], className="one column"),
                                         
                                 # Second part in row
                                 html.Div([
-                                            html.H2("Relationship between view on average and number of subscriber")
-                                        ], className="ten columns")
+                                            html.H2("  Relationship between view on average and number of subscriber")
+                                        ], className="eleven columns")
 
                                     ], className="row"),
 
+            
+                            # Row
                             html.Div([
+                                # First part in row
+                                html.Div([
+                                            html.H5("Account")
+                                        ], className="one columns"),
 
+                                # Second part in row
                                 html.Div([
                                             dcc.Dropdown(
                                                             id='account_filter',
@@ -227,8 +234,7 @@ layout = html.Div([
                                                         )
 
                                         ], className="five columns")
-
-                            ], style=dict(display='flex')),
+                                    ], style=dict(display='flex')),
                     
                             # Scatter graph
                             dcc.Loading(
@@ -300,13 +306,14 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
     fig_sunburst =go.Figure(go.Sunburst(
         labels=df_sunburst['All_label'].to_list(),
         parents=df_sunburst['Parent'].to_list(),
-        values=df_sunburst['Value'].to_list(),
+        values=df_sunburst['Value_raw'].to_list(),
         branchvalues='total',
-        textinfo='label+value',
+        # textinfo='label+value',
+        textinfo='label+percent entry',
         maxdepth=2,
         marker_colors= color_cat
     ))
-    fig_sunburst.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=22)
+    fig_sunburst.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=19)
 
 
     # Animated Scatter plot
@@ -333,11 +340,12 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
                 "Gold": "#DAA520",
                 "Silver": "#A9A9A9",
                 "Filtered by dropdown":"#CD5C5C"},
-                labels={"type_fan": "Group of creator", "fan": "Subscriber", "avg_view": "Average view"}
-                )
+                labels={"type_fan": "Group of creator", "fan": "Subscriber", "avg_view": "Average view",
+                "account_display_name": "Account name", "count": "Total post per month", "month":"Month",
+                "annotation_text":"Filtered account"})
 
     fig_scatter.update_traces(textposition='top center')
-    fig_scatter.update_layout(title_text = 'Size of bubble denotes frequency of video upload', title_x =0.88)
+    fig_scatter.update_layout(title_text = 'Size of bubble denotes frequency of video upload', title_x =0.86, title_y =0.92, title_font_size=14)
 
     # Update graph every frame of animation
     for button in fig_scatter.layout.updatemenus[0].buttons:
@@ -352,7 +360,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
     
     # Funnel chart
     fig_funnel = go.Figure()
-    list_y = ['Total Engagement', 'Reaction', 'Share', 'Comment', 'Tag friend', 'Purchase intention']
+    list_y = ['Reaction', 'Share', 'Comment', 'Tag friend', 'Purchase intention']
     fig_funnel.add_trace(go.Funnel(
         name = page1_drop,
         y = list_y,
@@ -364,7 +372,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
                         size=10,
                         color="black"
                       ),
-        marker={"color": ["#A9A9A9", "#A9A9A9", "#A9A9A9", "#A9A9A9", "#A9A9A9", "#A9A9A9"]},
+        marker={"color": ["#A9A9A9", "#A9A9A9", "#A9A9A9", "#A9A9A9", "#A9A9A9"]},
         texttemplate = "%{value:.2s} <br>(%{percentInitial})"
         ))
 
@@ -380,7 +388,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
                         size=10,
                         color="black"
                       ),
-        marker={"color": ["#B0C4DE", "#B0C4DE", "#B0C4DE", "#B0C4DE", "#B0C4DE", "#B0C4DE"]},
+        marker={"color": ["#B0C4DE", "#B0C4DE", "#B0C4DE", "#B0C4DE", "#B0C4DE"]},
         texttemplate = "%{value:.2s} <br>(%{percentInitial})"
         ))
 

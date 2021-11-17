@@ -1,9 +1,13 @@
 /* Add a background color to the top navigation */
 .topnav {
-  overflow: hidden;
-  background-image: -webkit-linear-gradient(to bottom right, #6930c3, 0%, #56cfe1 80%);
-	background-image: -moz-linear-gradient(to bottom right, #6930c3 0%, #56cfe1 100%);
-	background-image: linear-gradient(to bottom right, #6930c3 0%, #56cfe1 100%);
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9;
+    background-image: -webkit-linear-gradient(to bottom right, #6930c3, 0%, #56cfe1 80%);
+    background-image: -moz-linear-gradient(to bottom right, #6930c3 0%, #56cfe1 100%);
+    background-image: linear-gradient(to bottom right, #6930c3 0%, #56cfe1 100%);
   }
   
   /* Style the links inside the navigation bar */
