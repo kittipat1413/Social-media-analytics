@@ -306,7 +306,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
     fig_sunburst =go.Figure(go.Sunburst(
         labels=df_sunburst['All_label'].to_list(),
         parents=df_sunburst['Parent'].to_list(),
-        values=df_sunburst['Value_raw'].to_list(),
+        values=df_sunburst['Value'].to_list(),
         branchvalues='total',
         # textinfo='label+value',
         textinfo='label+percent entry',
