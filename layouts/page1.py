@@ -212,11 +212,13 @@ def change_filter(channel_drop, channel_drop2, top_drop, mapped_name):
 
     # Donut graph1
     fig_donut = go.Figure(data=[go.Pie(labels=df_channel_engagement['channel'], values=df_channel_engagement['account_id'], hole=.5, marker_colors=donut_colors, sort=False)])
-    fig_donut.update_layout(annotations=[dict(text='', x=0.5, y=0.5, font_size=20, showarrow=False)])
+    fig_donut.update_layout(annotations=[dict(text='', x=0.5, y=0.5, font_size=20, showarrow=False) ], legend_font_size=16)
+    fig_donut.update_traces(textinfo='label+percent')
 
     # Donut graph2
     fig_donut2 = go.Figure(data=[go.Pie(labels=df_channel_engagement['channel'], values=df_channel_engagement['new_engagement'], hole=.5, marker_colors=donut_colors, sort=False)])
-    fig_donut2.update_layout(annotations=[dict(text='', x=0.5, y=0.5, font_size=20, showarrow=False)])
+    fig_donut2.update_layout(annotations=[dict(text='', x=0.5, y=0.5, font_size=20, showarrow=False)],  legend_font_size=16)
+    fig_donut2.update_traces(textinfo='label+percent')
 
     # Heatmap chart graph3
     fig_heat3 = px.imshow(df_day_vs_time.loc[channel_drop],
@@ -257,7 +259,7 @@ def change_filter(channel_drop, channel_drop2, top_drop, mapped_name):
                     )
 
     fig_stack.update_traces(texttemplate='%{text:.3s}', textposition='inside')
-    fig_stack.update_layout(barmode='stack', yaxis={'categoryorder':'total ascending'})
+    fig_stack.update_layout(barmode='stack', yaxis={'categoryorder':'total ascending'},  legend_font_size=16)
 
 
     # Line chart
@@ -290,7 +292,7 @@ def change_filter(channel_drop, channel_drop2, top_drop, mapped_name):
                             
                     ),row=index+1, col=1,)
 
-    fig_line.update_layout(height=700)
+    fig_line.update_layout(height=700,  legend_font_size=16)
     fig_line.update_yaxes(title_text='Fan')
 
 

@@ -332,7 +332,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
         maxdepth=2,
         marker_colors= color_cat
     ))
-    fig_sunburst.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=19)
+    fig_sunburst.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=19,  legend_font_size=16)
 
 
     # Animated Scatter plot
@@ -365,17 +365,13 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
                 "annotation_text":"Filtered account"})
 
     fig_scatter.update_traces(textposition='top center')
-    fig_scatter.update_layout(title_text = 'Size of bubble denotes frequency of video upload', title_x =0.86, title_y =0.92, title_font_size=14)
-
-    # # Update graph every frame of animation
-    # for button in fig_scatter.layout.updatemenus[0].buttons:
-    #     button['args'][1]['frame']['redraw'] = True
+    fig_scatter.update_layout(title_text = 'Size of bubble denotes frequency of video upload', title_x =0.86, title_y =0.92, title_font_size=14,  legend_font_size=14)
 
 
     # Bar chart
     fig_bar = px.bar(df_ig_img_video, x='avg_engagement', y='post_type', orientation='h', text='avg_engagement', color='post_type', color_discrete_sequence=['#BA55D3', '#A9A9A9'], labels={"post_type": "Post type", "avg_engagement": "Average engagement"})
     fig_bar.update_traces(texttemplate='%{text:.2s}', textposition='inside')
-    fig_bar.update_layout(uniformtext_minsize=15, uniformtext_mode='hide', height=300)
+    fig_bar.update_layout(uniformtext_minsize=15, uniformtext_mode='hide', height=300,  legend_font_size=14)
 
     
     # Funnel chart
@@ -411,6 +407,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
         marker={"color": ["#B0C4DE", "#B0C4DE", "#B0C4DE", "#B0C4DE", "#B0C4DE"]},
         texttemplate = "%{value:.2s} <br>(%{percentInitial})"
         ))
+    fig_funnel.update_layout(legend_font_size=15)
 
     return fig_sunburst, fig_scatter, fig_bar, fig_funnel
 
