@@ -29,7 +29,7 @@ df_fb_funnel['fan_range'] = df_fb_funnel['fan_range'].astype(cat_type)
 
 
 # change fan_type column to categorical type fan_cats = ['Diamond', 'Gold', 'Silver', 'Highlighted']
-fan_cats = ['Diamond', 'Gold', 'Silver', 'Filtered by dropdown']
+fan_cats = ['Diamond', 'Gold', 'Silver', 'Filtered']
 fan_type = CategoricalDtype(categories=fan_cats, ordered=True)
 df_view_vs_fan['type_fan'] = df_view_vs_fan['type_fan'].astype(fan_type)
 
@@ -73,8 +73,8 @@ layout = html.Div([
                                             dcc.Dropdown(
                                                             id='categ_filter',
                                                             options=[{"value": x, "label": x}
-                                                                    for x in df_fb_funnel['category'].drop_duplicates()],
-                                                            value='Sales and review',
+                                                                    for x in ['All']+df_fb_funnel['category'].drop_duplicates().tolist()],
+                                                            value='All',
                                                             
                                                         )
                                         ], className="five columns")
@@ -258,14 +258,20 @@ layout = html.Div([
     Input('categ_filter', 'value'))
 def set_fan_amount_options(selected_categ):
 
-    return [{'label': i, 'value': i} for i in df_fb_funnel[df_fb_funnel['category'] == selected_categ]['fan_range'].sort_values().drop_duplicates()]
+    if selected_categ == 'All':
+        list_category = ['All'] + df_fb_funnel['fan_range'].sort_values().drop_duplicates().tolist()
+
+    else:
+        list_category = ['All'] + df_fb_funnel[df_fb_funnel['category'] == selected_categ]['fan_range'].sort_values().drop_duplicates().tolist()
+
+    return [{'label': i, 'value': i} for i in list_category]
 
 # Set fan_amount dropdown value
 @app.callback(
     Output('fan_amount_filter', 'value'),
     Input('fan_amount_filter', 'options'))
 def set_fan_amount_value(available_options):
-    return available_options[-1]['value']
+    return available_options[0]['value']
 
 # Set page dropdown option
 @app.callback(
@@ -274,7 +280,20 @@ def set_fan_amount_value(available_options):
     [Input('categ_filter', 'value'),
     Input('fan_amount_filter', 'value')])
 def set_page_options(selected_categ, selected_fan_amount):
-    list_option = [{'label': i, 'value': i} for i in df_fb_funnel[(df_fb_funnel['category'] == selected_categ) & (df_fb_funnel['fan_range'] == selected_fan_amount)]['account_display_name'].drop_duplicates()]    
+
+    if (selected_categ == 'All') & (selected_fan_amount == 'All'):
+        list_category = df_fb_funnel['account_display_name'].drop_duplicates().tolist()
+
+    elif (selected_categ == 'All') & (selected_fan_amount != 'All'):
+        list_category = df_fb_funnel[(df_fb_funnel['fan_range'] == selected_fan_amount)]['account_display_name'].drop_duplicates().tolist()
+
+    elif (selected_categ != 'All') & (selected_fan_amount == 'All'):
+        list_category = df_fb_funnel[(df_fb_funnel['category'] == selected_categ)]['account_display_name'].drop_duplicates().tolist()
+
+    else:
+        list_category = df_fb_funnel[(df_fb_funnel['category'] == selected_categ) & (df_fb_funnel['fan_range'] == selected_fan_amount)]['account_display_name'].drop_duplicates().tolist()
+
+    list_option = [{'label': i, 'value': i} for i in list_category]    
 
     return list_option, list_option
 # Set page dropdown value
@@ -326,9 +345,10 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
     df_focus = df_view_vs_fan.copy()
 
     # Set type_fan = 'Filtered by dropdown' only for filtered account
-    df_focus.loc[filter_account, 'type_fan'] = 'Filtered by dropdown'
+    df_focus.loc[filter_account, 'type_fan'] = 'Filtered'
 
-    df_focus = df_focus.sort_values(by=['type_fan', 'account_display_name', 'month'])
+    # df_focus = df_focus.sort_values(by=['type_fan', 'account_display_name', 'month'])
+    df_focus = df_focus.sort_values(by=['month'])
 
     fig_scatter = px.scatter(df_focus, x="fan", y="avg_view", color="type_fan",
                 animation_frame="month", animation_group="account_display_name", size="count", size_max=80,
@@ -339,7 +359,7 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
                 "Diamond": "#483D8B",
                 "Gold": "#DAA520",
                 "Silver": "#A9A9A9",
-                "Filtered by dropdown":"#CD5C5C"},
+                "Filtered":"#CD5C5C"},
                 labels={"type_fan": "Group of creator", "fan": "Subscriber", "avg_view": "Average view",
                 "account_display_name": "Account name", "count": "Total post per month", "month":"Month",
                 "annotation_text":"Filtered account"})
@@ -347,9 +367,9 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
     fig_scatter.update_traces(textposition='top center')
     fig_scatter.update_layout(title_text = 'Size of bubble denotes frequency of video upload', title_x =0.86, title_y =0.92, title_font_size=14)
 
-    # Update graph every frame of animation
-    for button in fig_scatter.layout.updatemenus[0].buttons:
-        button['args'][1]['frame']['redraw'] = True
+    # # Update graph every frame of animation
+    # for button in fig_scatter.layout.updatemenus[0].buttons:
+    #     button['args'][1]['frame']['redraw'] = True
 
 
     # Bar chart
