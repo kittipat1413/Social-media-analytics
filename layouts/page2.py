@@ -43,6 +43,29 @@ encoded_tw_image = base64.b64encode(open(IMG_PATH.joinpath('tw.png'), 'rb').read
 encoded_ig_image = base64.b64encode(open(IMG_PATH.joinpath('ig.png'), 'rb').read())
 encoded_yt_image = base64.b64encode(open(IMG_PATH.joinpath('yt.png'), 'rb').read())
 
+# Sunburst chart
+color_cat=['', '#ABDEE6', '#CBAACB', '#f8de7e', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#a9ba9d', '#b5b9ff', '#B5EAD7', '#55CBCD']
+fig_sunburst =go.Figure(go.Sunburst(
+    labels=df_sunburst['All_label'].to_list(),
+    parents=df_sunburst['Parent'].to_list(),
+    values=df_sunburst['Value'].to_list(),
+    branchvalues='total',
+    # textinfo='label+value',
+    textinfo='label+percent entry',
+    maxdepth=2,
+    marker_colors= color_cat
+))
+fig_sunburst.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=19,  legend_font_size=16)
+
+
+# Bar chart
+fig_bar = px.bar(df_ig_img_video, x='avg_engagement', y='post_type', orientation='h', text='avg_engagement', color='post_type', color_discrete_sequence=['#BA55D3', '#A9A9A9'], labels={"post_type": "Post type", "avg_engagement": "Average engagement"})
+fig_bar.update_traces(texttemplate='%{text:.2s}', textposition='inside')
+fig_bar.update_layout(uniformtext_minsize=15, uniformtext_mode='hide', height=300,  legend_font_size=14)
+
+
+
+
 layout = html.Div([
                 
                     # First Header
@@ -157,7 +180,7 @@ layout = html.Div([
                             dcc.Loading(
                                         id="loading-1",
                                         type="default",
-                                        children= dcc.Graph(id="graph8")
+                                        children= dcc.Graph(id="graph8", figure=fig_bar)
                                        )
 
                         ],className="box"),
@@ -189,7 +212,7 @@ layout = html.Div([
                             dcc.Loading(
                                         id="loading-1",
                                         type="default",
-                                        children= dcc.Graph(id="graph6")
+                                        children= dcc.Graph(id="graph6", figure=fig_sunburst)
                                        )
                         ],className="box"),
                     ],style={
@@ -306,35 +329,11 @@ def set_page_value(available_options1, available_options2):
 
     return available_options1[0]['value'], available_options2[0]['value']
 
-
+# Change scatter chart
 @app.callback(
-    [Output("graph6", "figure"),
-    Output("graph7", "figure"),
-    Output("graph8", "figure"),
-    Output("graph9", "figure")], 
-    [Input("page1_filter", "value"),
-    Input("page2_filter", "value"),
-    Input("categ_filter", "value"),
-    Input("fan_amount_filter", "value"),
-    Input("account_filter", "value")
-    ])
-def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_drop):
-
-    # Sunburst chart
-    color_cat=['', '#ABDEE6', '#CBAACB', '#f8de7e', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#a9ba9d', '#b5b9ff', '#B5EAD7', '#55CBCD']
-    fig_sunburst =go.Figure(go.Sunburst(
-        labels=df_sunburst['All_label'].to_list(),
-        parents=df_sunburst['Parent'].to_list(),
-        values=df_sunburst['Value'].to_list(),
-        branchvalues='total',
-        # textinfo='label+value',
-        textinfo='label+percent entry',
-        maxdepth=2,
-        marker_colors= color_cat
-    ))
-    fig_sunburst.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=19,  legend_font_size=16)
-
-
+    Output("graph7", "figure"), 
+    Input("account_filter", "value"))
+def change_scatter(account_drop):
     # Animated Scatter plot
     filter_account = df_view_vs_fan['account_display_name'] == account_drop
 
@@ -367,13 +366,17 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
     fig_scatter.update_traces(textposition='top center')
     fig_scatter.update_layout(title_text = 'Size of bubble denotes frequency of video upload', title_x =0.86, title_y =0.92, title_font_size=14,  legend_font_size=14)
 
+    return fig_scatter
 
-    # Bar chart
-    fig_bar = px.bar(df_ig_img_video, x='avg_engagement', y='post_type', orientation='h', text='avg_engagement', color='post_type', color_discrete_sequence=['#BA55D3', '#A9A9A9'], labels={"post_type": "Post type", "avg_engagement": "Average engagement"})
-    fig_bar.update_traces(texttemplate='%{text:.2s}', textposition='inside')
-    fig_bar.update_layout(uniformtext_minsize=15, uniformtext_mode='hide', height=300,  legend_font_size=14)
-
-    
+# Change funnel
+@app.callback(
+    Output("graph9", "figure"), 
+    [Input("page1_filter", "value"),
+    Input("page2_filter", "value"),
+    Input("categ_filter", "value"),
+    Input("fan_amount_filter", "value")
+    ])
+def change_funnel(page1_drop, page2_drop, categ_drop , fan_amount_drop):
     # Funnel chart
     fig_funnel = go.Figure()
     list_y = ['Reaction', 'Share', 'Comment', 'Tag friend', 'Purchase intention']
@@ -409,5 +412,6 @@ def change_filter(page1_drop, page2_drop, categ_drop , fan_amount_drop, account_
         ))
     fig_funnel.update_layout(legend_font_size=15)
 
-    return fig_sunburst, fig_scatter, fig_bar, fig_funnel
+    return fig_funnel
+
 
