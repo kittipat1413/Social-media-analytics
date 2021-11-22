@@ -42,7 +42,6 @@ encoded_fb_image = base64.b64encode(open(IMG_PATH.joinpath('fb.png'), 'rb').read
 encoded_tw_image = base64.b64encode(open(IMG_PATH.joinpath('tw.png'), 'rb').read())
 encoded_ig_image = base64.b64encode(open(IMG_PATH.joinpath('ig.png'), 'rb').read())
 encoded_yt_image = base64.b64encode(open(IMG_PATH.joinpath('yt.png'), 'rb').read())
-
 # Sunburst chart
 color_cat=['', '#ABDEE6', '#CBAACB', '#f8de7e', '#FFCCB6', '#F3B0C3', '#FCB9AA', '#a9ba9d', '#b5b9ff', '#B5EAD7', '#55CBCD']
 fig_sunburst =go.Figure(go.Sunburst(
@@ -347,7 +346,7 @@ def change_scatter(account_drop):
     df_focus.loc[filter_account, 'type_fan'] = 'Filtered'
 
     # df_focus = df_focus.sort_values(by=['type_fan', 'account_display_name', 'month'])
-    df_focus = df_focus.sort_values(by=['month'])
+    df_focus = df_focus.sort_values(by=['month', 'type_fan'])
 
     fig_scatter = px.scatter(df_focus, x="fan", y="avg_view", color="type_fan",
                 animation_frame="month", animation_group="account_display_name", size="count", size_max=80,
